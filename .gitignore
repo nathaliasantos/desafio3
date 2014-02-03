@@ -1,4 +1,11 @@
-/target
+/target/
 .classpath
 .project
 *~
+.settings 
+bin/
+temp/
+.log
+build/
+opt/
+
