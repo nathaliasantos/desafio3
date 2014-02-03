@@ -1,11 +1,10 @@
-/target/
+target/
 .classpath
 .project
-*~
-.settings 
+.settings/
 bin/
 temp/
 .log
+~
 build/
-opt/
-
+otp/
