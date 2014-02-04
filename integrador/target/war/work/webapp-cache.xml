@@ -4,8 +4,26 @@
       <string>currentBuild</string>
       <path-set>
         <pathsSet class="linked-hash-set">
-          <string>WEB-INF/web.xml</string>
           <string>index.jsp</string>
+          <string>WEB-INF/web.xml</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/GetResponse.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/package-info.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/Get.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/Update.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/UpdateResponse.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/DeleteResponse.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/Delete.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/Create.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/BaseEntity.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/Cliente.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/CreateResponse.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/ClienteResource.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/DeleteAllResponse.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/ClienteResourcePortType.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/ObjectFactory.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/List.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/DeleteAll.class</string>
+          <string>WEB-INF/classes/soa32/faturamento/resource/ListResponse.class</string>
           <string>WEB-INF/lib/log4j-1.2.16.jar</string>
           <string>WEB-INF/lib/slf4j-log4j12-1.6.1.jar</string>
           <string>WEB-INF/lib/slf4j-api-1.6.1.jar</string>
