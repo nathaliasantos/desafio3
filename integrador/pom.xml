@@ -4,7 +4,7 @@
   <groupId>com.dextra.app</groupId>
   <artifactId>integrador</artifactId>
   <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>Integrador</name>
   <url>http://maven.apache.org</url>
 
