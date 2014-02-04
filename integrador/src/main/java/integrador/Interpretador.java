@@ -55,5 +55,8 @@ public class Interpretador {
 		}
 
 	}
+	public void math(){
+		//TODO
+	}
 
 }
