@@ -56,9 +56,6 @@ public class Interpretador {
 
 	}
 	
-	public int ASMDASODKASO (){
-		return 0;
-	}
 	public void math(){
 		System.out.println("Olá");
 	}
