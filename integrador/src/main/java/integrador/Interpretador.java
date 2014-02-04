@@ -56,7 +56,11 @@ public class Interpretador {
 
 	}
 	public void math(){
-		//TODO
+		System.out.println("Olá");
+	}
+	
+	public void math2(){
+		System.out.println("Olá");
 	}
 
 }
