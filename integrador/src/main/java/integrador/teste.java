@@ -1,5 +1,6 @@
 package integrador;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import soa32.resources.cliente.Cliente;
@@ -19,7 +20,7 @@ public static void main(String[] args) {
 	List<NotaFiscal> listaNota = no.list();
 	System.out.println("listagem do numero das notas fiscais:");
 	for (NotaFiscal notaFiscal : listaNota) {
-		System.out.println(notaFiscal.getNumero());
+		System.out.println(notaFiscal.getId() + "//" + notaFiscal.getNumero() + "//" + notaFiscal.getPedido() + "//" + notaFiscal.getStatus() );
 	}
 	System.out.println("////////////////////////////////////////////");
 	ClienteResource c = new ClienteResource();
@@ -32,10 +33,13 @@ public static void main(String[] args) {
 	
 	ProdutoResource p = new ProdutoResource();
 	ProdutoResourcePortType pr = p.getProdutoResourcePort();
-	List<Produto> listaProduto = pr.list();
+	ArrayList<Produto> listaProduto = (ArrayList)pr.list();
 	System.out.println("listagem do numero dos produtos:");
 	for (Produto produto : listaProduto) {
 		System.out.println(produto.getNome());
 	}
+	
+	
 }
+
 }

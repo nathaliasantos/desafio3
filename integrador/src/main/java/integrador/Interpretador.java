@@ -3,6 +3,7 @@ package integrador;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -37,14 +38,16 @@ public class Interpretador {
 	ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 
 	public Interpretador() {
-		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(3);
-	    executor.scheduleAtFixedRate(new ThreadClient(), 0, 5000, TimeUnit.MILLISECONDS);
-	    executor.scheduleAtFixedRate(new ThreadProduto(), 100, 5000, TimeUnit.MILLISECONDS);
-	    executor.scheduleAtFixedRate(new ThreadPedido(), 200, 5000, TimeUnit.MILLISECONDS);
-	    executor.scheduleAtFixedRate(new ThreadNotaFiscal(), 300, 5000, TimeUnit.MILLISECONDS);
+		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(
+				3);
+		executor.scheduleAtFixedRate(new ThreadClient(), 0, 5000,
+				TimeUnit.MILLISECONDS);
+		executor.scheduleAtFixedRate(new ThreadProduto(), 100, 5000,
+				TimeUnit.MILLISECONDS);
+		executor.scheduleAtFixedRate(new ThreadPedido(), 200, 5000,
+				TimeUnit.MILLISECONDS);
 	}
 
-	// VER SE FUNFA
 	private void adicionaNovosClientes(ArrayList<Cliente> clientesNovos) {
 		ClienteResource c = new ClienteResource();
 		ClienteResourcePortType cl = c.getClienteResourcePort();
@@ -52,105 +55,130 @@ public class Interpretador {
 			cl.create(cliente);
 	}
 
-	// VER SE FUNFA
 	private void deletaClientes(ArrayList<Cliente> clientesDeletados) {
 		ClienteResource c = new ClienteResource();
 		ClienteResourcePortType cl = c.getClienteResourcePort();
 		for (Cliente cliente : clientesDeletados)
 			cl.delete(cliente.getId());
 	}
-	private  ClienteResourcePortType criaClienteResourcePortType(){
+
+	private ClienteResourcePortType criaClienteResourcePortType() {
 		ClienteResource c = new ClienteResource();
-		return c.getClienteResourcePort();		
+		return c.getClienteResourcePort();
 	}
-	
-	private  ProdutoResourcePortType criaProdutoResourcePortType(){
+
+	private ProdutoResourcePortType criaProdutoResourcePortType() {
 		ProdutoResource p = new ProdutoResource();
 		return p.getProdutoResourcePort();
 	}
-	
-	private  NotaFiscalResourcePortType criaNotaFiscalResourcePortType(){
+
+	private NotaFiscalResourcePortType criaNotaFiscalResourcePortType() {
 		NotaFiscalResource n = new NotaFiscalResource();
 		return n.getNotaFiscalResourcePort();
 	}
-	
-	private class ThreadClient implements Runnable{
+
+	private class ThreadClient implements Runnable {
 		@Override
 		public void run() {
-			ArrayList<Object> clientesCaptacaoObject = getListFromUrl("/captacao/api/clientes.json",CLIENTE);
+			ArrayList<Object> clientesCaptacaoObject = getListFromUrl(
+					"/captacao/api/clientes.json", CLIENTE);
 			ArrayList<Cliente> clientesCaptacao = new ArrayList<Cliente>();
-			for (int i=0;i<clientesCaptacaoObject.size();i++)
-				clientesCaptacao.add((Cliente)clientesCaptacaoObject.get(i));
-			
-			ArrayList<Cliente> clientesFaturamento = (ArrayList)criaClienteResourcePortType().list();
+			for (int i = 0; i < clientesCaptacaoObject.size(); i++)
+				clientesCaptacao.add((Cliente) clientesCaptacaoObject.get(i));
+
+			ArrayList<Cliente> clientesFaturamento = (ArrayList) criaClienteResourcePortType()
+					.list();
 			ArrayList<Cliente> clientesNovos;
-			clientesNovos = ListaUtils.listaAdicionar(clientesFaturamento, clientesCaptacao);
-			
+			clientesNovos = ListaUtils.listaAdicionar(clientesFaturamento,
+					clientesCaptacao);
+
 			ArrayList<Cliente> clientesExcluidos;
-			clientesExcluidos = ListaUtils.listaDeletar(clientesFaturamento, clientesCaptacao);
-			
+			clientesExcluidos = ListaUtils.listaDeletar(clientesFaturamento,
+					clientesCaptacao);
+
 			adicionaNovosClientes(clientesNovos);
 			deletaClientes(clientesExcluidos);
-		}		
+		}
 	}
-	
-	private class ThreadProduto implements Runnable{
+
+	private class ThreadProduto implements Runnable {
 		@Override
 		public void run() {
-			ArrayList<Object> produtosCaptacaoObject = getListFromUrl("/captacao/api/produtos.json",PRODUTO);
+			ArrayList<Object> produtosCaptacaoObject = getListFromUrl(
+					"/captacao/api/produtos.json", PRODUTO);
 			ArrayList<Produto> produtosCaptacao = new ArrayList<Produto>();
-			for (int i=0;i<produtosCaptacaoObject.size();i++)
-				produtosCaptacao.add((Produto)produtosCaptacaoObject.get(i));
-			
-			ArrayList<Produto> produtosFaturamento = (ArrayList)criaProdutoResourcePortType().list();
+			for (int i = 0; i < produtosCaptacaoObject.size(); i++)
+				produtosCaptacao.add((Produto) produtosCaptacaoObject.get(i));
+
+			ArrayList<Produto> produtosFaturamento = (ArrayList) criaProdutoResourcePortType()
+					.list();
 			ArrayList<Produto> produtosNovos;
-			produtosNovos = ListaUtils.listaAdicionar(produtosCaptacao, produtosFaturamento);
-			
+			produtosNovos = ListaUtils.listaAdicionar(produtosCaptacao,
+					produtosFaturamento);
+
 			ArrayList<Produto> ProdutosExcluidos;
-			ProdutosExcluidos = ListaUtils.listaDeletar(produtosCaptacao, produtosFaturamento);
-			
-//          ESPERAR A NAT DAR COMMIT NO adionaNovosProdutos(ArrayList<>) PARA DAR PULL			
-//			adicionaNovosProdutos(produtosNovos);
-//			deletaProdutos(produtosExcluidos);
-		}		
+			ProdutosExcluidos = ListaUtils.listaDeletar(produtosCaptacao,
+					produtosFaturamento);
+
+			adicionarNovosProdutos(produtosNovos);
+			// deletaProdutos(produtosExcluidos);
+		}
 	}
-	
-	private class ThreadPedido implements Runnable{
+
+	private class ThreadPedido implements Runnable {
 		@Override
-		public void run() {	
-			ArrayList<Object> pedidoCaptacaoObject = getListFromUrl("/captacao/api/pedido.json",PEDIDO);
+		public void run() {
+			ArrayList<Object> pedidoCaptacaoObject = getListFromUrl(
+					"/captacao/api/pedido.json", PEDIDO);
 			ArrayList<Pedido> pedidoCaptacao = new ArrayList<Pedido>();
-			for (int i=0;i<pedidoCaptacaoObject.size();i++)
-				pedidoCaptacao.add((Pedido)pedidoCaptacaoObject.get(i));
-			
-			ArrayList<NotaFiscal> notaFiscalFaturamento = (ArrayList)criaNotaFiscalResourcePortType().list();
+			for (int i = 0; i < pedidoCaptacaoObject.size(); i++)
+				pedidoCaptacao.add((Pedido) pedidoCaptacaoObject.get(i));
+
+			ArrayList<NotaFiscal> notaFiscalFaturamento = (ArrayList) criaNotaFiscalResourcePortType()
+					.list();
 
 			for (Pedido pedido : pedidoCaptacao) {
 				if (pedido.notaFiscal != null)
 					pedidoCaptacao.remove(pedido);
 			}
 			
-			for (NotaFiscal notaFiscal : notaFiscalFaturamento) {
-				for (Pedido pedido : pedidoCaptacao){			
+			for (Pedido pedido : pedidoCaptacao) {
+				Long ultimoIdNotaFiscal = new Long(0);
+				boolean existeNotaFiscalParaOProduto = false;
 				
-					 if ((notaFiscal.getPedido() == pedido.id) && (notaFiscal.getStatus() == Status.PROCESSADA))
-						 
-						 //enviar para captacao
+				for (NotaFiscal notaFiscal : notaFiscalFaturamento) {					
+					if (notaFiscal.getPedido() == pedido.id){
+						existeNotaFiscalParaOProduto = true;
+						if (notaFiscal.getStatus() == Status.PROCESSADA) {
+							criaNotaFiscalResourcePortType().delete(notaFiscal.getId());
+							notaFiscal.setStatus(Status.EMITIDA);
+							criaNotaFiscalResourcePortType().create(notaFiscal);
+							
+							Long idNotaFiscal = notaFiscal.getId();
+							pedido.notaFiscal = idNotaFiscal;
+							//removerPedidoDesatualizado(Long idDoPedido)
+							//adicionarNovoPedido(Pedido pedido)
+							
+							//perguntar o que é nota fiscalLink
+						}					    
+					}
+					if (notaFiscal.getId() > ultimoIdNotaFiscal)
+						ultimoIdNotaFiscal = new Long(notaFiscal.getId());
+				}
+				if (!existeNotaFiscalParaOProduto)				
+				{
+					NotaFiscal novaNotaFiscal = new NotaFiscal();
+					novaNotaFiscal.setId(ultimoIdNotaFiscal);
+					novaNotaFiscal.setNumero(new Long(0));
+					novaNotaFiscal.setPedido(pedido.id);
+					novaNotaFiscal.setStatus(null);
+										
+					criaNotaFiscalResourcePortType().create(novaNotaFiscal);
 				}
 			}
-			
-			pedidosSemNotaFiscal = ListaUtils.listaAdicionar(pedidoCaptacao, pedidosFaturamento);
-			
-			ArrayList<NotaFiscal> PedidosExcluidos;
-			PedidosExcluidos = ListaUtils.listaDeletar(pedidoCaptacao, pedidosFaturamento);
-					
+		}
 	}
-	private class ThreadNotaFiscal implements Runnable{
-		@Override
-		public void run() {			
-		}		
-	}
-	
+
 	private ArrayList<Object> transformIntoCliente(JsonArray lista) {
 		ArrayList<Object> listaClientes = new ArrayList<Object>();
 		for (int i = 0; i < lista.size(); i++) {
@@ -243,6 +271,40 @@ public class Interpretador {
 		}
 		return null;
 
+	}
+
+	public void adicionarNovosProdutos(ArrayList<Produto> produtosNovos) {
+		try {
+			URL url = new URL("http://dls98:8181/captacao/api/produtos.json");
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/json");
+
+			for (Produto produto : produtosNovos) {
+				// transformar os produtos em um json
+			}
+
+			// String prodNovo = json.toString;
+			String prodNovo = "";
+
+			OutputStream os = conn.getOutputStream();
+			os.write(prodNovo.getBytes());
+			os.flush();
+			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+				throw new RuntimeException("Failed : HTTP error code : "
+						+ conn.getResponseCode());
+			}
+			os.close();
+			conn.disconnect();
+		} catch (MalformedURLException e) {
+
+			e.printStackTrace();
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
 	}
 
 }
