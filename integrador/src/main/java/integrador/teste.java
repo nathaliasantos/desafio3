@@ -1,5 +1,6 @@
 package integrador;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import soa32.resources.cliente.Cliente;
@@ -30,12 +31,17 @@ public static void main(String[] args) {
 		System.out.println(cliente.getNome());
 	}
 	
+	Interpretador.adicionarNovosProdutos();
+	
 	ProdutoResource p = new ProdutoResource();
 	ProdutoResourcePortType pr = p.getProdutoResourcePort();
-	List<Produto> listaProduto = pr.list();
+	ArrayList<Produto> listaProduto = (ArrayList)pr.list();
 	System.out.println("listagem do numero dos produtos:");
 	for (Produto produto : listaProduto) {
 		System.out.println(produto.getNome());
 	}
+	
+	
 }
+
 }

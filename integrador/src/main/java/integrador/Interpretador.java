@@ -3,6 +3,7 @@ package integrador;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -122,4 +123,42 @@ public class Interpretador {
 
 	}
 
+	public static void adicionarNovosProdutos(){
+		 try {
+				URL url = new URL("http://dls98:8181/captacao/api/produtos.json");
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				conn.setDoOutput(true);
+				conn.setRequestMethod("POST");
+				conn.setRequestProperty("Content-Type", "application/json");
+		 
+				String input = "{\"id\" : 20, \"nome\" : \"NOVO Monitor LED 3D Benq Gamer 24 Polegadas Widescreen Full HD XL2420T - Preto\",\"departamento\" : \"MONITORES\",\"fabricante\" : \"BENQ\", \"precoDeCusto\": 100,\"dataValidade\" : null,\"tamanho\" : null,\"urlImage\" : null,\"itemExclusivo\" : null}";
+		 
+				OutputStream os = conn.getOutputStream();
+				os.write(input.getBytes());
+				os.flush();
+		 
+				if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+					throw new RuntimeException("Failed : HTTP error code : "
+						+ conn.getResponseCode());
+				}
+		 
+				BufferedReader br = new BufferedReader(new InputStreamReader(
+						(conn.getInputStream())));
+		 
+				String output;
+				System.out.println("Output from Server .... \n");
+				while ((output = br.readLine()) != null) {
+					System.out.println(output);
+				}
+				conn.disconnect();
+			}catch (MalformedURLException e) {
+			
+				e.printStackTrace();
+			
+			} catch (IOException e) {
+			
+				e.printStackTrace();
+			}
+	}
+	
 }
