@@ -6,27 +6,86 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import soa32.resources.cliente.Cliente;
+import soa32.resources.produto.Produto;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class Interpretador {
 
 	ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 
 	public Interpretador() {
-		try {
+		getListFromUrl("/captacao/api/clientes.json", 1);
+	}
 
-			URL url = new URL("http://dls98:8181/captacao/api/clientes?wsdl");
+	private ArrayList<Cliente> transformIntoCliente(JsonArray lista) {
+		ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
+		for (int i = 0; i < lista.size(); i++) {
+			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
+			Cliente novoCliente = new Cliente();
+			novoCliente.setId(new Long(Integer.parseInt(objetoAtual.get("id")
+					.getAsString())));
+			novoCliente.setCelular(objetoAtual.get("celular").getAsString());
+			novoCliente.setCpf(objetoAtual.get("cpf").getAsString());
+			novoCliente.setEmail(objetoAtual.get("email").getAsString());
+			novoCliente.setNome(objetoAtual.get("nome").getAsString());
+
+			Date data = new Date(objetoAtual.get("dataNascimento").getAsString());
+			GregorianCalendar c = new GregorianCalendar();
+			c.setTime(data);
+			XMLGregorianCalendar date2 = null;
+			try {
+				date2 = DatatypeFactory.newInstance()
+						.newXMLGregorianCalendar(c);
+			} catch (DatatypeConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			novoCliente.setDataNascimento(date2);
+			listaClientes.add(novoCliente);
+		}
+
+		return listaClientes;
+	}
+
+	private ArrayList<Produto> transformIntoProduto(JsonArray lista) {
+		ArrayList<Produto> listaProdutos = new ArrayList<Produto>();
+		for (int i = 0; i < lista.size(); i++) {
+			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
+			
+		}
+		
+		return listaProdutos;
+	}
+
+	private ArrayList<Pedido> transformIntoPedido(JsonArray lista) {
+		ArrayList<Pedido> listaPedidos = new ArrayList<Pedido>();
+		for (int i = 0; i < lista.size(); i++) {
+			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
+		}
+
+		return listaPedidos;
+	}
+
+	private final int CLIENTE = 1, PRODUTO = 2, PEDIDO = 3;
+
+	public ArrayList<Object> getListFromUrl(String strUrl, int tipo) {
+		try {
+			URL url = new URL("http://dls98:8181" + strUrl);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
-			conn.setRequestProperty("Accept", "application/json");
 
 			if (conn.getResponseCode() != 200) {
 				throw new RuntimeException("Failed : HTTP error code : "
@@ -41,8 +100,18 @@ public class Interpretador {
 			while ((output = br.readLine()) != null) {
 				total += output;
 			}
+			JsonObject retornoJson = (JsonObject) (new JsonParser())
+					.parse(total);
+
+			JsonArray lista = retornoJson.getAsJsonArray();
 
 			conn.disconnect();
+			if (tipo == CLIENTE)
+				return retornoJson;
+			if (tipo == PRODUTO)
+				return retornoJson;
+			if (tipo == PEDIDO)
+				return retornoJson;
 
 		} catch (MalformedURLException e) {
 
@@ -54,14 +123,6 @@ public class Interpretador {
 
 		}
 
-	}
-	
-	public void math(){
-		System.out.println("Olá");
-	}
-	
-	public void math2(){
-		System.out.println("Olá");
 	}
 
 }
