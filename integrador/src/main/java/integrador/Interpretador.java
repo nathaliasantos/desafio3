@@ -29,8 +29,8 @@ public class Interpretador {
 		getListFromUrl("/captacao/api/clientes.json", 1);
 	}
 
-	private ArrayList<Cliente> transformIntoCliente(JsonArray lista) {
-		ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
+	private ArrayList<Object> transformIntoCliente(JsonArray lista) {
+		ArrayList<Object> listaClientes = new ArrayList<Object>();
 		for (int i = 0; i < lista.size(); i++) {
 			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
 			Cliente novoCliente = new Cliente();
@@ -60,8 +60,8 @@ public class Interpretador {
 		return listaClientes;
 	}
 
-	private ArrayList<Produto> transformIntoProduto(JsonArray lista) {
-		ArrayList<Produto> listaProdutos = new ArrayList<Produto>();
+	private ArrayList<Object> transformIntoProduto(JsonArray lista) {
+		ArrayList<Object> listaProdutos = new ArrayList<Object>();
 		for (int i = 0; i < lista.size(); i++) {
 			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
 			
@@ -70,8 +70,8 @@ public class Interpretador {
 		return listaProdutos;
 	}
 
-	private ArrayList<Pedido> transformIntoPedido(JsonArray lista) {
-		ArrayList<Pedido> listaPedidos = new ArrayList<Pedido>();
+	private ArrayList<Object> transformIntoPedido(JsonArray lista) {
+		ArrayList<Object> listaPedidos = new ArrayList<Object>();
 		for (int i = 0; i < lista.size(); i++) {
 			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
 		}
@@ -107,21 +107,18 @@ public class Interpretador {
 
 			conn.disconnect();
 			if (tipo == CLIENTE)
-				return retornoJson;
+				return transformIntoCliente(lista);
 			if (tipo == PRODUTO)
-				return retornoJson;
+				return transformIntoProduto(lista);
 			if (tipo == PEDIDO)
-				return retornoJson;
+				return transformIntoPedido(lista);
 
 		} catch (MalformedURLException e) {
-
 			e.printStackTrace();
-
 		} catch (IOException e) {
-
 			e.printStackTrace();
-
 		}
+		return null;
 
 	}
 
