@@ -3,8 +3,10 @@ package integrador;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,7 +17,8 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import soa32.resources.cliente.Cliente;
-import soa32.resources.produto.Produto;
+import soa32.resources.cliente.ClienteResource;
+import soa32.resources.cliente.ClienteResourcePortType;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -27,6 +30,22 @@ public class Interpretador {
 
 	public Interpretador() {
 		getListFromUrl("/captacao/api/clientes.json", 1);
+	}
+
+	// VER SE FUNFA
+	private void adicionaNovosClientes(ArrayList<Cliente> clientesNovos) {
+		ClienteResource c = new ClienteResource();
+		ClienteResourcePortType cl = c.getClienteResourcePort();
+		for (Cliente cliente : clientesNovos)
+			cl.create(cliente);
+	}
+
+	// VER SE FUNFA
+	private void deletaClientes(ArrayList<Cliente> clientesDeletados) {
+		ClienteResource c = new ClienteResource();
+		ClienteResourcePortType cl = c.getClienteResourcePort();
+		for (Cliente cliente : clientesDeletados)
+			cl.delete(cliente.getId());
 	}
 
 	private ArrayList<Object> transformIntoCliente(JsonArray lista) {
@@ -41,7 +60,8 @@ public class Interpretador {
 			novoCliente.setEmail(objetoAtual.get("email").getAsString());
 			novoCliente.setNome(objetoAtual.get("nome").getAsString());
 
-			Date data = new Date(objetoAtual.get("dataNascimento").getAsString());
+			Date data = new Date(objetoAtual.get("dataNascimento")
+					.getAsString());
 			GregorianCalendar c = new GregorianCalendar();
 			c.setTime(data);
 			XMLGregorianCalendar date2 = null;
@@ -64,9 +84,9 @@ public class Interpretador {
 		ArrayList<Object> listaProdutos = new ArrayList<Object>();
 		for (int i = 0; i < lista.size(); i++) {
 			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
-			
+
 		}
-		
+
 		return listaProdutos;
 	}
 
