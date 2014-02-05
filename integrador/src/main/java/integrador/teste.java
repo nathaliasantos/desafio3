@@ -31,8 +31,6 @@ public static void main(String[] args) {
 		System.out.println(cliente.getNome());
 	}
 	
-	Interpretador.adicionarNovosProdutos();
-	
 	ProdutoResource p = new ProdutoResource();
 	ProdutoResourcePortType pr = p.getProdutoResourcePort();
 	ArrayList<Produto> listaProduto = (ArrayList)pr.list();
