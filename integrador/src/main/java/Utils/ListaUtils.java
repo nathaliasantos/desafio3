@@ -2,7 +2,7 @@ package Utils;
 import java.util.ArrayList;
 
 public class ListaUtils {
-	public static <T> ArrayList<T> diferenca(ArrayList<T> list1,			ArrayList<T> list2) {
+	public static <T> ArrayList<T> diferenca(ArrayList<T> list1, ArrayList<T> list2) {
 		ArrayList<T> list = list1;
 		list.removeAll(list2);
 		return list;

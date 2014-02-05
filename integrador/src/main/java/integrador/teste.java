@@ -21,7 +21,7 @@ public static void main(String[] args) {
 	for (NotaFiscal notaFiscal : listaNota) {
 		System.out.println(notaFiscal.getNumero());
 	}
-	
+	System.out.println("////////////////////////////////////////////");
 	ClienteResource c = new ClienteResource();
 	ClienteResourcePortType cl = c.getClienteResourcePort();	
 	List<Cliente> listaCliente = cl.list();
