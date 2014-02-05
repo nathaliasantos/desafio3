@@ -24,7 +24,7 @@ public static void main(String[] args) {
 	}
 	
 	ClienteResource c = new ClienteResource();
-	ClienteResourcePortType cl = c.getClienteResourcePort();
+	ClienteResourcePortType cl = c.getClienteResourcePort();	
 	List<Cliente> listaCliente = cl.list();
 	System.out.println("listagem do nome dos clientes:");
 	for (Cliente cliente : listaCliente) {

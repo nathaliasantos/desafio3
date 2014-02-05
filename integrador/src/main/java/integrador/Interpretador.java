@@ -10,13 +10,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import soa32.resources.cliente.Cliente;
-import soa32.resources.produto.Produto;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -27,9 +28,34 @@ public class Interpretador {
 	ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 
 	public Interpretador() {
-		getListFromUrl("/captacao/api/clientes.json", 1);
+		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(3);
+	    executor.scheduleAtFixedRate(new ThreadClient(), 0, 5000, TimeUnit.MILLISECONDS);
+	    executor.scheduleAtFixedRate(new ThreadProduto(), 100, 5000, TimeUnit.MILLISECONDS);
+	    executor.scheduleAtFixedRate(new ThreadPedido(), 200, 5000, TimeUnit.MILLISECONDS);
+	    executor.scheduleAtFixedRate(new ThreadNotaFiscal(), 300, 5000, TimeUnit.MILLISECONDS);
 	}
 
+	private class ThreadClient implements Runnable{
+		@Override
+		public void run() {
+		}		
+	}
+	private class ThreadProduto implements Runnable{
+		@Override
+		public void run() {			
+		}		
+	}
+	private class ThreadPedido implements Runnable{
+		@Override
+		public void run() {			
+		}		
+	}
+	private class ThreadNotaFiscal implements Runnable{
+		@Override
+		public void run() {			
+		}		
+	}
+	
 	private ArrayList<Object> transformIntoCliente(JsonArray lista) {
 		ArrayList<Object> listaClientes = new ArrayList<Object>();
 		for (int i = 0; i < lista.size(); i++) {
@@ -82,7 +108,7 @@ public class Interpretador {
 
 	private final int CLIENTE = 1, PRODUTO = 2, PEDIDO = 3;
 
-	public ArrayList<Object> getListFromUrl(String strUrl, int tipo) {
+	private ArrayList<Object> getListFromUrl(String strUrl, int tipo) {
 		try {
 			URL url = new URL("http://dls98:8181" + strUrl);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
