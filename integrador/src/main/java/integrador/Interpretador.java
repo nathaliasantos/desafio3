@@ -333,7 +333,8 @@ public class Interpretador {
 				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 				conn.setRequestMethod("DELETE");
 				conn.disconnect();
-				
+				int responseCode = conn.getResponseCode();
+				System.out.println("response code"+ responseCode);
 			}catch (MalformedURLException e) {
 			
 				e.printStackTrace();
@@ -344,5 +345,7 @@ public class Interpretador {
 			}
 	}
 	
-
+	public static void main(String[] args) {
+		excluirProdutos("16");
+	}
 }
