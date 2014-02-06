@@ -40,10 +40,10 @@ public class Interpretador {
 
 	public static void main(String[] args) {
 		new Interpretador();
-		Cliente c1 =  criaClienteResourcePortType().get((long)1);
-		c1.setId((long)21);
-		c1.setNome("NOVO");
-		adicionarNovosClientesParaTeste(c1);
+		//Cliente c1 =  criaClienteResourcePortType().get((long)1);
+		//c1.setId((long)21);
+		//c1.setNome("NOVO");
+		//adicionarNovosClientesParaTeste(c1);
 	}
 
 	public Interpretador() {
@@ -413,6 +413,7 @@ public class Interpretador {
 
 			e.printStackTrace();
 		}
+		
 	}
 	
 	public static void excluirProdutos(String id) {

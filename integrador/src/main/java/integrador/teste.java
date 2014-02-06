@@ -29,7 +29,7 @@ public static void main(String[] args) {
 	List<Cliente> listaCliente = cl.list();
 	System.out.println("listagem do nome dos clientes:");
 	for (Cliente cliente : listaCliente) {
-		System.out.println(cliente.getNome());
+		System.out.println(cliente.getId());
 	}
 	
 	ProdutoResource p = new ProdutoResource();
@@ -40,7 +40,7 @@ public static void main(String[] args) {
 		System.out.println(produto.getNome());
 	}
 	
-	Interpretador.excluirProdutos("15");
+	//Interpretador.excluirProdutos("15");
 
 }
 
