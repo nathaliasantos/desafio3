@@ -40,6 +40,10 @@ public class Interpretador {
 
 	public static void main(String[] args) {
 		new Interpretador();
+		Cliente c1 =  criaClienteResourcePortType().get((long)1);
+		c1.setId((long)21);
+		c1.setNome("NOVO");
+		adicionarNovosClientesParaTeste(c1);
 	}
 
 	public Interpretador() {
@@ -69,7 +73,7 @@ public class Interpretador {
 			cl.delete(cliente.getId());
 	}
 
-	private ClienteResourcePortType criaClienteResourcePortType() {
+	private static ClienteResourcePortType criaClienteResourcePortType() {
 		ClienteResource c = new ClienteResource();
 		return c.getClienteResourcePort();
 	}
@@ -320,6 +324,55 @@ public class Interpretador {
 		return null;
 
 	}
+	
+	public static void adicionarNovosClientesParaTeste(Cliente cliente){
+		 try {
+				URL url = new URL("http://dls98:8181/captacao/api/clientes.json");
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				conn.setDoOutput(true);
+				conn.setRequestMethod("POST");
+				conn.setRequestProperty("Content-Type", "application/json");
+		 
+				OutputStream os = conn.getOutputStream();
+				
+				JsonObject json = new JsonObject();
+				
+					json.addProperty("id", cliente.getId());
+					json.addProperty("nome", cliente.getNome());
+					json.addProperty("email", cliente.getEmail());
+					json.addProperty("cpf", cliente.getCpf());
+					json.addProperty("dataNascimento", cliente.getDataNascimento().toString());
+					json.addProperty("celular", cliente.getCelular());
+
+					
+					os.write(json.toString().getBytes()); 
+					os.flush();	
+				
+		 
+				if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+					throw new RuntimeException("Failed : HTTP error code : "
+						+ conn.getResponseCode());
+				}
+		 
+				BufferedReader br = new BufferedReader(new InputStreamReader(
+						(conn.getInputStream())));
+		 
+				String output;
+				System.out.println("Output from Server .... \n");
+				while ((output = br.readLine()) != null) {
+					System.out.println(output);
+				}
+				conn.disconnect();
+				
+			}catch (MalformedURLException e) {
+			
+				e.printStackTrace();
+			
+			} catch (IOException e) {
+			
+				e.printStackTrace();
+			}
+	}
 
 	public static void adicionarNovosProdutos(List<Produto> novosProdutos) {
 		try {
@@ -361,7 +414,7 @@ public class Interpretador {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public static void excluirProdutos(String id) {
 		try {
 			URL url = new URL("http://dls98:8181/captacao/api/produtos?id="
