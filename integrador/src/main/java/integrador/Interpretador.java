@@ -39,26 +39,30 @@ public class Interpretador {
 	ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 
 	public static void main(String[] args) {
-		new Interpretador();
+		//new Interpretador();
 
-//		XMLGregorianCalendar today = null;
-//		try {
-//		  today = DatatypeFactory.newInstance()
-//		    .newXMLGregorianCalendar(
-//		        new GregorianCalendar(2008,10,1));
-//		} catch (DatatypeConfigurationException e) {
-//		  // TODO Auto-generated catch block
-//		  e.printStackTrace();
-//		}
-//		
-//		Cliente c1 = new Cliente();
-//		c1.setCelular("999999999");
-//		c1.setId((long)23);
-//		c1.setNome("TESTE3");
-//		c1.setCpf("111.111.111-11");
-//		c1.setEmail("joaninha@teste.com");
-//		c1.setDataNascimento(today);
-//		adicionarNovosClientesParaTeste(c1);
+		XMLGregorianCalendar today = null;
+		try {
+		  today = DatatypeFactory.newInstance()
+		    .newXMLGregorianCalendar(
+		        new GregorianCalendar(2008,10,1));
+		} catch (DatatypeConfigurationException e) {
+		  // TODO Auto-generated catch block
+		  e.printStackTrace();
+		}
+		
+		Cliente c1 = new Cliente();
+		c1.setCelular("999999999");
+		c1.setId((long)25);
+		c1.setNome("TESTE12");
+		c1.setCpf("111.111.111-11");
+		c1.setEmail("joaninha@teste.com");
+		c1.setDataNascimento(today);
+	
+		
+		ClienteResourcePortType c =  criaClienteResourcePortType();
+		c.create(c1);
+		System.out.println("fdasdfasdfasdfadsf");
 	}
 
 	public Interpretador() {
@@ -119,14 +123,6 @@ public class Interpretador {
 
 			ArrayList<Cliente> clientesFaturamento = (ArrayList) criaClienteResourcePortType()
 					.list();
-
-			for (Cliente a : clientesFaturamento){
-				System.out.println(asdString(a));
-			}
-			System.out.println("//////////////////////");
-			for (Cliente a : clientesCaptacao){
-				System.out.println(asdString(a));
-			}
 			ArrayList<Cliente> clientesNovos;
 			clientesNovos = listaAdicionar(clientesFaturamento,	clientesCaptacao);
 
@@ -136,6 +132,16 @@ public class Interpretador {
 
 			adicionaNovosClientes(clientesNovos);
 			deletaClientes(clientesExcluidos);
+			
+			System.out.println("CLIENTES FATURAMENTO: ");
+			for (Cliente a : clientesFaturamento){
+				System.out.println(asdString(a));
+			}
+			System.out.println("//////////////////////");
+			System.out.println("CLIENTES CAPTACAO: ");
+			for (Cliente a : clientesCaptacao){
+				System.out.println(asdString(a));
+			}
 		}
 	}
 
@@ -340,7 +346,7 @@ public class Interpretador {
 
 	}
 	
-	public static void adicionarNovosClientesParaTeste(Cliente cliente){
+	public static void adicionarNovosClientesNaCaptacaoParaTeste(Cliente cliente){
 		 try {
 				URL url = new URL("http://dls98:8181/captacao/api/clientes.json");
 				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
