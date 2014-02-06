@@ -40,6 +40,10 @@ public class Interpretador {
 
 	public static void main(String[] args) {
 		new Interpretador();
+		Cliente c1 =  criaClienteResourcePortType().get((long)1);
+		c1.setId((long)21);
+		c1.setNome("NOVO");
+		adicionarNovosClientesParaTeste(c1);
 	}
 
 	public Interpretador() {
@@ -69,7 +73,7 @@ public class Interpretador {
 			cl.delete(cliente.getId());
 	}
 
-	private ClienteResourcePortType criaClienteResourcePortType() {
+	private static ClienteResourcePortType criaClienteResourcePortType() {
 		ClienteResource c = new ClienteResource();
 		return c.getClienteResourcePort();
 	}
@@ -84,6 +88,11 @@ public class Interpretador {
 		return n.getNotaFiscalResourcePort();
 	}
 
+	private String asdString(Cliente c) {
+		return c.getId() + "/" + c.getCelular() + "/" + c.getCpf() + "/"
+				+ c.getEmail() + "/" + c.getNome();
+	}
+
 	private class ThreadClient implements Runnable {
 		@Override
 		public void run() {
@@ -95,9 +104,16 @@ public class Interpretador {
 
 			ArrayList<Cliente> clientesFaturamento = (ArrayList) criaClienteResourcePortType()
 					.list();
+
+			for (Cliente a : clientesFaturamento){
+				System.out.println(asdString(a));
+			}
+			System.out.println("//////////////////////");
+			for (Cliente a : clientesCaptacao){
+				System.out.println(asdString(a));
+			}
 			ArrayList<Cliente> clientesNovos;
-			clientesNovos = ListaUtils.listaAdicionar(clientesFaturamento,
-					clientesCaptacao);
+			clientesNovos = listaAdicionar(clientesFaturamento,	clientesCaptacao);
 
 			ArrayList<Cliente> clientesExcluidos;
 			clientesExcluidos = ListaUtils.listaDeletar(clientesFaturamento,
@@ -308,6 +324,55 @@ public class Interpretador {
 		return null;
 
 	}
+	
+	public static void adicionarNovosClientesParaTeste(Cliente cliente){
+		 try {
+				URL url = new URL("http://dls98:8181/captacao/api/clientes.json");
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				conn.setDoOutput(true);
+				conn.setRequestMethod("POST");
+				conn.setRequestProperty("Content-Type", "application/json");
+		 
+				OutputStream os = conn.getOutputStream();
+				
+				JsonObject json = new JsonObject();
+				
+					json.addProperty("id", cliente.getId());
+					json.addProperty("nome", cliente.getNome());
+					json.addProperty("email", cliente.getEmail());
+					json.addProperty("cpf", cliente.getCpf());
+					json.addProperty("dataNascimento", cliente.getDataNascimento().toString());
+					json.addProperty("celular", cliente.getCelular());
+
+					
+					os.write(json.toString().getBytes()); 
+					os.flush();	
+				
+		 
+				if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+					throw new RuntimeException("Failed : HTTP error code : "
+						+ conn.getResponseCode());
+				}
+		 
+				BufferedReader br = new BufferedReader(new InputStreamReader(
+						(conn.getInputStream())));
+		 
+				String output;
+				System.out.println("Output from Server .... \n");
+				while ((output = br.readLine()) != null) {
+					System.out.println(output);
+				}
+				conn.disconnect();
+				
+			}catch (MalformedURLException e) {
+			
+				e.printStackTrace();
+			
+			} catch (IOException e) {
+			
+				e.printStackTrace();
+			}
+	}
 
 	public static void adicionarNovosProdutos(List<Produto> novosProdutos) {
 		try {
@@ -349,7 +414,7 @@ public class Interpretador {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public static void excluirProdutos(String id) {
 		try {
 			URL url = new URL("http://dls98:8181/captacao/api/produtos?id="
@@ -369,4 +434,30 @@ public class Interpretador {
 		}
 	}
 
+	private boolean igual (Cliente a , Cliente b){
+			return a.getId() == b.getId();
+	}
+	
+	public ArrayList<Cliente> diferenca(ArrayList<Cliente> list1, ArrayList<Cliente> list2) {
+		ArrayList<Cliente> list = new ArrayList<Cliente>();
+		for (Cliente a :list1)
+		{
+			boolean existe = false;
+			for (Cliente b : list2){
+				if (igual(a,b))
+					existe = true;
+			}
+			if (!existe)
+				list.add(a);
+		}			
+		return list;
+	}
+
+	public ArrayList<Cliente> listaAdicionar(ArrayList<Cliente> antiga, ArrayList<Cliente> nova) {
+		return diferenca(nova, antiga);
+	}
+
+	public ArrayList<Cliente> listaDeletar(ArrayList<Cliente> antiga, ArrayList<Cliente> nova) {
+		return diferenca(antiga, nova);
+	}
 }
