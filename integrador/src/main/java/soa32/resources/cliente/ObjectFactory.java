@@ -37,7 +37,6 @@ public class ObjectFactory {
     private final static QName _Create_QNAME = new QName("http://resource.faturamento.soa32/", "create");
     private final static QName _List_QNAME = new QName("http://resource.faturamento.soa32/", "list");
     private final static QName _GetResponse_QNAME = new QName("http://resource.faturamento.soa32/", "getResponse");
-    private final static QName _BaseEntity_QNAME = new QName("http://resource.faturamento.soa32/", "baseEntity");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: soa32.resources.cliente
@@ -265,15 +264,6 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://resource.faturamento.soa32/", name = "getResponse")
     public JAXBElement<GetResponse> createGetResponse(GetResponse value) {
         return new JAXBElement<GetResponse>(_GetResponse_QNAME, GetResponse.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link BaseEntity }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://resource.faturamento.soa32/", name = "baseEntity")
-    public JAXBElement<BaseEntity> createBaseEntity(BaseEntity value) {
-        return new JAXBElement<BaseEntity>(_BaseEntity_QNAME, BaseEntity.class, null, value);
     }
 
 }
