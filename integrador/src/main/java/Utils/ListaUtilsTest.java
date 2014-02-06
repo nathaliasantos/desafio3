@@ -3,9 +3,9 @@ package Utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.junit.Test;
-
 import junit.framework.TestCase;
+
+import org.junit.Test;
 
 public class ListaUtilsTest extends TestCase {
 
@@ -16,7 +16,7 @@ public class ListaUtilsTest extends TestCase {
 
 		list1.addAll(Arrays.asList(2, 3, 5, 8, 13, 21));
 		list2.addAll(Arrays.asList(1, 2, 3, 5, 8, 13));
-		ArrayList list3 = new ArrayList<Integer>();
+		ArrayList<Integer> list3 = new ArrayList<Integer>();
 		list3.add(21);
 
 		assertEquals(list3, ListaUtils.diferenca(list1, list2));
