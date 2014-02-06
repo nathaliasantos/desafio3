@@ -40,10 +40,25 @@ public class Interpretador {
 
 	public static void main(String[] args) {
 		new Interpretador();
-		Cliente c1 =  criaClienteResourcePortType().get((long)1);
-		c1.setId((long)21);
-		c1.setNome("NOVO");
-		adicionarNovosClientesParaTeste(c1);
+
+//		XMLGregorianCalendar today = null;
+//		try {
+//		  today = DatatypeFactory.newInstance()
+//		    .newXMLGregorianCalendar(
+//		        new GregorianCalendar(2008,10,1));
+//		} catch (DatatypeConfigurationException e) {
+//		  // TODO Auto-generated catch block
+//		  e.printStackTrace();
+//		}
+//		
+//		Cliente c1 = new Cliente();
+//		c1.setCelular("999999999");
+//		c1.setId((long)23);
+//		c1.setNome("TESTE3");
+//		c1.setCpf("111.111.111-11");
+//		c1.setEmail("joaninha@teste.com");
+//		c1.setDataNascimento(today);
+//		adicionarNovosClientesParaTeste(c1);
 	}
 
 	public Interpretador() {
