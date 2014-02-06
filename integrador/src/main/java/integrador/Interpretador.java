@@ -61,16 +61,22 @@ public class Interpretador {
 
 	private void adicionaNovosClientes(ArrayList<Cliente> clientesNovos) {
 		ClienteResource c = new ClienteResource();
-		ClienteResourcePortType cl = c.getClienteResourcePort();
+		ClienteResourcePortType cl = c.getClienteResourcePort();	
 		for (Cliente cliente : clientesNovos)
+		{
+			System.out.println("CRIAR: " + cliente.getId() );
 			cl.create(cliente);
+		}
 	}
 
 	private void deletaClientes(ArrayList<Cliente> clientesDeletados) {
 		ClienteResource c = new ClienteResource();
 		ClienteResourcePortType cl = c.getClienteResourcePort();
 		for (Cliente cliente : clientesDeletados)
+		{
+			System.out.println("EXCLUIR: " + cliente.getId());
 			cl.delete(cliente.getId());
+		}
 	}
 
 	private static ClienteResourcePortType criaClienteResourcePortType() {
@@ -108,16 +114,23 @@ public class Interpretador {
 			for (Cliente a : clientesFaturamento){
 				System.out.println(asdString(a));
 			}
-			System.out.println("//////////////////////");
+			
 			for (Cliente a : clientesCaptacao){
 				System.out.println(asdString(a));
 			}
 			ArrayList<Cliente> clientesNovos;
 			clientesNovos = listaAdicionar(clientesFaturamento,	clientesCaptacao);
 
+			for (Cliente a : clientesNovos){
+				System.out.println(asdString(a));
+			}
 			ArrayList<Cliente> clientesExcluidos;
 			clientesExcluidos = ListaUtils.listaDeletar(clientesFaturamento,
 					clientesCaptacao);
+			for (Cliente a : clientesExcluidos){
+				System.out.println(asdString(a));
+			}
+			
 
 			adicionaNovosClientes(clientesNovos);
 			deletaClientes(clientesExcluidos);
