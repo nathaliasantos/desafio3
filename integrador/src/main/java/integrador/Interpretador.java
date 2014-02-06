@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +19,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import soa32.resources.cliente.Cliente;
+import soa32.resources.produto.Produto;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -149,7 +151,7 @@ public class Interpretador {
 
 	}
 
-	public static void adicionarNovosProdutos(){
+	public static void adicionarNovosProdutos(List<Produto> novosProdutos){
 		 try {
 				URL url = new URL("http://dls98:8181/captacao/api/produtos.json");
 				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -157,11 +159,25 @@ public class Interpretador {
 				conn.setRequestMethod("POST");
 				conn.setRequestProperty("Content-Type", "application/json");
 		 
-				String input = "{\"id\" : 20, \"nome\" : \"NOVO Monitor LED 3D Benq Gamer 24 Polegadas Widescreen Full HD XL2420T - Preto\",\"departamento\" : \"MONITORES\",\"fabricante\" : \"BENQ\", \"precoDeCusto\": 100,\"dataValidade\" : null,\"tamanho\" : null,\"urlImage\" : null,\"itemExclusivo\" : null}";
-		 
 				OutputStream os = conn.getOutputStream();
-				os.write(input.getBytes());
-				os.flush();
+				
+				JsonObject json = new JsonObject();
+				
+				for (Produto produto : novosProdutos)
+				{
+					json.addProperty("id", produto.getId());
+					json.addProperty("nome", produto.getNome());
+					json.addProperty("departamento", produto.getDepartamento());
+					json.addProperty("fabricante", produto.getFabricante());
+					json.addProperty("precoDeCusto", produto.getPrecoDeCusto());
+					json.addProperty("dataValidade", produto.getDataValidade());
+					json.addProperty("tamanho", produto.getTamanho());
+					json.addProperty("urlImage", produto.getUrlImage());
+					json.addProperty("itemExclusivo", produto.isItemExclusivo());
+					
+					os.write(json.toString().getBytes()); 
+					os.flush();	
+				}
 		 
 				if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
 					throw new RuntimeException("Failed : HTTP error code : "
@@ -177,6 +193,24 @@ public class Interpretador {
 					System.out.println(output);
 				}
 				conn.disconnect();
+				
+			}catch (MalformedURLException e) {
+			
+				e.printStackTrace();
+			
+			} catch (IOException e) {
+			
+				e.printStackTrace();
+			}
+	}
+	
+	public static void excluirProdutos(String id){
+		 try {
+				URL url = new URL("http://dls98:8181/captacao/api/produtos?id="+ id);
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				conn.setRequestMethod("DELETE");
+				conn.disconnect();
+				
 			}catch (MalformedURLException e) {
 			
 				e.printStackTrace();

@@ -1,6 +1,7 @@
 package integrador;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import soa32.resources.cliente.Cliente;
@@ -12,6 +13,7 @@ import soa32.resources.notaFiscal.NotaFiscalResourcePortType;
 import soa32.resources.produto.Produto;
 import soa32.resources.produto.ProdutoResource;
 import soa32.resources.produto.ProdutoResourcePortType;
+
 
 public class teste {
 public static void main(String[] args) {
@@ -33,13 +35,14 @@ public static void main(String[] args) {
 	
 	ProdutoResource p = new ProdutoResource();
 	ProdutoResourcePortType pr = p.getProdutoResourcePort();
-	ArrayList<Produto> listaProduto = (ArrayList)pr.list();
+	ArrayList<Produto> listaProduto = (ArrayList<Produto>)pr.list();
 	System.out.println("listagem do numero dos produtos:");
 	for (Produto produto : listaProduto) {
 		System.out.println(produto.getNome());
 	}
 	
-	
+	Interpretador.excluirProdutos("15");
+
 }
 
 }
