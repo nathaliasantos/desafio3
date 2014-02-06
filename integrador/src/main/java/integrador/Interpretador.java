@@ -53,8 +53,8 @@ public class Interpretador {
 		
 		Cliente c1 = new Cliente();
 		c1.setCelular("999999999");
-		c1.setId((long)25);
-		c1.setNome("TESTE12");
+		c1.setId((long)28);
+		c1.setNome("TESTEID28");
 		c1.setCpf("111.111.111-11");
 		c1.setEmail("joaninha@teste.com");
 		c1.setDataNascimento(today);
@@ -63,6 +63,30 @@ public class Interpretador {
 		ClienteResourcePortType c =  criaClienteResourcePortType();
 		c.create(c1);
 		System.out.println("fdasdfasdfasdfadsf");
+		
+//		ClienteResourcePortType c =  criaClienteResourcePortType();
+//		c.delete((long)25);
+//		c.delete((long)1);
+		
+//		XMLGregorianCalendar today = null;
+//		try {
+//		  today = DatatypeFactory.newInstance()
+//		    .newXMLGregorianCalendar(
+//		        new GregorianCalendar(2008,10,1));
+//		} catch (DatatypeConfigurationException e) {
+//		  // TODO Auto-generated catch block
+//		  e.printStackTrace();
+//		}
+//		
+//		Cliente c1 = new Cliente();
+//		c1.setCelular("999999999");
+//		c1.setId((long)28);
+//		c1.setNome("TESTEID28");
+//		c1.setCpf("111.111.111-11");
+//		c1.setEmail("joaninha@teste.com");
+//		c1.setDataNascimento(today);
+//		adicionarNovosClientesNaCaptacaoParaTeste(c1);
+		
 	}
 
 	public Interpretador() {
