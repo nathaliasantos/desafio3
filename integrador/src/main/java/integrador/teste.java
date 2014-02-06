@@ -22,9 +22,9 @@ public static void main(String[] args) {
 	List<NotaFiscal> listaNota = no.list();
 	System.out.println("listagem do numero das notas fiscais:");
 	for (NotaFiscal notaFiscal : listaNota) {
-		System.out.println(notaFiscal.getNumero());
+		System.out.println(notaFiscal.getId() + "//" + notaFiscal.getNumero() + "//" + notaFiscal.getPedido() + "//" + notaFiscal.getStatus() );
 	}
-	
+	System.out.println("////////////////////////////////////////////");
 	ClienteResource c = new ClienteResource();
 	ClienteResourcePortType cl = c.getClienteResourcePort();	
 	List<Cliente> listaCliente = cl.list();
