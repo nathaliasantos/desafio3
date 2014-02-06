@@ -41,18 +41,18 @@ public class Interpretador {
 	public static void main(String[] args) {
 		new Interpretador();
 	}
+
 	public Interpretador() {
 		ThreadClient a = new ThreadClient();
 		a.run();
 		/*
-		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(
-				3);
-		executor.scheduleAtFixedRate(new ThreadClient(), 0, 5000,
-				TimeUnit.MILLISECONDS);
-		executor.scheduleAtFixedRate(new ThreadProduto(), 100, 5000,
-				TimeUnit.MILLISECONDS);
-		executor.scheduleAtFixedRate(new ThreadPedido(), 200, 5000,
-				TimeUnit.MILLISECONDS);*/
+		 * ScheduledThreadPoolExecutor executor = new
+		 * ScheduledThreadPoolExecutor( 3); executor.scheduleAtFixedRate(new
+		 * ThreadClient(), 0, 5000, TimeUnit.MILLISECONDS);
+		 * executor.scheduleAtFixedRate(new ThreadProduto(), 100, 5000,
+		 * TimeUnit.MILLISECONDS); executor.scheduleAtFixedRate(new
+		 * ThreadPedido(), 200, 5000, TimeUnit.MILLISECONDS);
+		 */
 	}
 
 	private void adicionaNovosClientes(ArrayList<Cliente> clientesNovos) {
@@ -199,15 +199,16 @@ public class Interpretador {
 			novoCliente.setNome(objetoAtual.get("nome").getAsString());
 
 			System.out.println(objetoAtual.get("dataNascimento").getAsString());
-			
+
 			XMLGregorianCalendar date2 = null;
 			try {
-				date2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(objetoAtual.get("dataNascimento").getAsString());
+				date2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(
+						objetoAtual.get("dataNascimento").getAsString());
 			} catch (DatatypeConfigurationException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
+
 			novoCliente.setDataNascimento(date2);
 			listaClientes.add(novoCliente);
 		}
@@ -221,15 +222,20 @@ public class Interpretador {
 			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
 			Produto novoProduto = new Produto();
 			novoProduto.setId(Long.parseLong(objetoAtual.get("id")
-					.getAsString()));			
+					.getAsString()));
 			novoProduto.setNome(objetoAtual.get("nome").getAsString());
-			novoProduto.setDepartamento(objetoAtual.get("departamento").getAsString());
-			novoProduto.setFabricante(objetoAtual.get("fabricante").getAsString());
+			novoProduto.setDepartamento(objetoAtual.get("departamento")
+					.getAsString());
+			novoProduto.setFabricante(objetoAtual.get("fabricante")
+					.getAsString());
 			novoProduto.setTamanho(objetoAtual.get("tamanho").getAsString());
 			novoProduto.setUrlImage(objetoAtual.get("urlImage").getAsString());
-			novoProduto.setItemExclusivo(new Boolean(objetoAtual.get("itemExclusivo").getAsString()));
-			novoProduto.setDataValidade(objetoAtual.get("dataValidade").getAsString());
-			novoProduto.setPrecoDeCusto(Long.parseLong(objetoAtual.get("dataValidade").getAsString()));
+			novoProduto.setItemExclusivo(new Boolean(objetoAtual.get(
+					"itemExclusivo").getAsString()));
+			novoProduto.setDataValidade(objetoAtual.get("dataValidade")
+					.getAsString());
+			novoProduto.setPrecoDeCusto(Long.parseLong(objetoAtual.get(
+					"dataValidade").getAsString()));
 
 			listaProdutos.add(novoProduto);
 		}
@@ -242,14 +248,19 @@ public class Interpretador {
 		for (int i = 0; i < lista.size(); i++) {
 			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
 			Pedido novoPedido = new Pedido();
-			novoPedido.setId(Long.parseLong(objetoAtual.get("id").getAsString()));
-			novoPedido.setLote(Long.parseLong(objetoAtual.get("lote").getAsString()));
-			novoPedido.setNotaFiscal(Long.parseLong(objetoAtual.get("notaFiscal").getAsString()));
+			novoPedido.setId(Long
+					.parseLong(objetoAtual.get("id").getAsString()));
+			novoPedido.setLote(Long.parseLong(objetoAtual.get("lote")
+					.getAsString()));
+			novoPedido.setNotaFiscal(Long.parseLong(objetoAtual.get(
+					"notaFiscal").getAsString()));
 			novoPedido.setStatus(objetoAtual.get("fabricante").getAsString());
 			novoPedido.setItens(null); // TODO fazer
-			novoPedido.setNotaFiscalLink(objetoAtual.get("notaFiscalLink").getAsString());
-			novoPedido.setLoteLink(new Boolean(objetoAtual.get("loteLink").getAsString()));
-			
+			novoPedido.setNotaFiscalLink(objetoAtual.get("notaFiscalLink")
+					.getAsString());
+			novoPedido.setLoteLink(new Boolean(objetoAtual.get("loteLink")
+					.getAsString()));
+
 			listaPedidos.add(novoPedido);
 		}
 
@@ -278,7 +289,8 @@ public class Interpretador {
 				total += output;
 			}
 
-			JsonArray lista = (JsonArray) (new JsonParser()).parse(total);;
+			JsonArray lista = (JsonArray) (new JsonParser()).parse(total);
+			;
 
 			conn.disconnect();
 			if (tipo == CLIENTE)
@@ -328,17 +340,6 @@ public class Interpretador {
 				throw new RuntimeException("Failed : HTTP error code : "
 						+ conn.getResponseCode());
 			}
-
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					(conn.getInputStream())));
-
-			String output;
-			System.out.println("Output from Server .... \n");
-			while ((output = br.readLine()) != null) {
-				System.out.println(output);
-			}
-			conn.disconnect();
-
 		} catch (MalformedURLException e) {
 
 			e.printStackTrace();
@@ -356,7 +357,8 @@ public class Interpretador {
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("DELETE");
 			conn.disconnect();
-
+			int responseCode = conn.getResponseCode();
+			System.out.println("response code" + responseCode);
 		} catch (MalformedURLException e) {
 
 			e.printStackTrace();
