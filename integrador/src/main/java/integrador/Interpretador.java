@@ -39,31 +39,32 @@ public class Interpretador {
 	ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 
 	public static void main(String[] args) {
+
 		//new Interpretador();
 
-		XMLGregorianCalendar today = null;
-		try {
-		  today = DatatypeFactory.newInstance()
-		    .newXMLGregorianCalendar(
-		        new GregorianCalendar(2008,10,1));
-		} catch (DatatypeConfigurationException e) {
-		  // TODO Auto-generated catch block
-		  e.printStackTrace();
-		}
-		
-		Cliente c1 = new Cliente();
-		c1.setCelular("999999999");
-		c1.setId((long)30);
-		c1.setNome("TESTEID30");
-		c1.setCpf("111.111.111-11");
-		c1.setEmail("joaninha@teste.com");
-		c1.setDataNascimento(today);
-	
-		
-		ClienteResourcePortType c =  criaClienteResourcePortType();
-		c.create(c1);
-		System.out.println("cliente adicionado no faturamento");
-		
+//		XMLGregorianCalendar today = null;
+//		try {
+//		  today = DatatypeFactory.newInstance()
+//		    .newXMLGregorianCalendar(
+//		        new GregorianCalendar(2008,10,1));
+//		} catch (DatatypeConfigurationException e) {
+//		  // TODO Auto-generated catch block
+//		  e.printStackTrace();
+//		}
+//		
+//		Cliente c1 = new Cliente();
+//		c1.setCelular("999999999");
+//		c1.setId((long)32);
+//		c1.setNome("TESTEID30");
+//		c1.setCpf("111.111.111-11");
+//		c1.setEmail("joaninha@teste.com");
+//		c1.setDataNascimento(today);
+//	
+//		
+//		ClienteResourcePortType c =  criaClienteResourcePortType();
+//		c.create(c1);
+//		System.out.println("cliente adicionado no faturamento");
+//		
 //		ClienteResourcePortType c =  criaClienteResourcePortType();
 //		c.delete((long)25);
 //		c.delete((long)1);
@@ -86,7 +87,12 @@ public class Interpretador {
 //		c1.setEmail("joaninha@teste.com");
 //		c1.setDataNascimento(today);
 //		adicionarNovosClientesNaCaptacaoParaTeste(c1);
-		
+	
+		new Interpretador();
+		//Cliente c1 =  criaClienteResourcePortType().get((long)1);
+		//c1.setId((long)21);
+		//c1.setNome("NOVO");
+		//adicionarNovosClientesParaTeste(c1);
 	}
 
 	public Interpretador() {
@@ -104,16 +110,22 @@ public class Interpretador {
 
 	private void adicionaNovosClientes(ArrayList<Cliente> clientesNovos) {
 		ClienteResource c = new ClienteResource();
-		ClienteResourcePortType cl = c.getClienteResourcePort();
+		ClienteResourcePortType cl = c.getClienteResourcePort();	
 		for (Cliente cliente : clientesNovos)
+		{
+			System.out.println("CRIAR: " + cliente.getDataNascimento() );
 			cl.create(cliente);
+		}
 	}
 
 	private void deletaClientes(ArrayList<Cliente> clientesDeletados) {
 		ClienteResource c = new ClienteResource();
 		ClienteResourcePortType cl = c.getClienteResourcePort();
 		for (Cliente cliente : clientesDeletados)
+		{
+			System.out.println("EXCLUIR: " + cliente.getId());
 			cl.delete(cliente.getId());
+		}
 	}
 
 	private static ClienteResourcePortType criaClienteResourcePortType() {
@@ -133,7 +145,7 @@ public class Interpretador {
 
 	private String asdString(Cliente c) {
 		return c.getId() + "/" + c.getCelular() + "/" + c.getCpf() + "/"
-				+ c.getEmail() + "/" + c.getNome();
+				+ c.getEmail() + "/" + c.getNome() + "/" + c.getDataNascimento();
 	}
 
 	private class ThreadClient implements Runnable {
@@ -147,13 +159,32 @@ public class Interpretador {
 
 			ArrayList<Cliente> clientesFaturamento = (ArrayList) criaClienteResourcePortType()
 					.list();
+
+			System.out.println("CLIENTES FATURAMENTO: ");
+			for (Cliente a : clientesFaturamento){
+				System.out.println(asdString(a));
+			}
+			
+			System.out.println("CLIENTES CAPTACAO: ");
+			for (Cliente a : clientesCaptacao){
+				System.out.println(asdString(a));
+			}
+			
+			System.out.println("CLIENTE NOVOS: ");
 			ArrayList<Cliente> clientesNovos;
 			clientesNovos = listaAdicionar(clientesFaturamento,	clientesCaptacao);
 
+			for (Cliente a : clientesNovos){
+				System.out.println(asdString(a));
+			}
 			ArrayList<Cliente> clientesExcluidos;
 			clientesExcluidos = ListaUtils.listaDeletar(clientesFaturamento,
 					clientesCaptacao);
-
+			System.out.println("CLIENTE A EXCLUIR: ");
+			for (Cliente a : clientesExcluidos){
+				System.out.println(asdString(a));
+			}
+			
 			adicionaNovosClientes(clientesNovos);
 			deletaClientes(clientesExcluidos);
 			
@@ -259,18 +290,19 @@ public class Interpretador {
 			novoCliente.setEmail(objetoAtual.get("email").getAsString());
 			novoCliente.setNome(objetoAtual.get("nome").getAsString());
 
-			System.out.println(objetoAtual.get("dataNascimento").getAsString());
-
-			XMLGregorianCalendar date2 = null;
+			String[] split = objetoAtual.get("dataNascimento").getAsString().split("T")[0].split("-");
+			
+			XMLGregorianCalendar date = null;
 			try {
-				date2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(
-						objetoAtual.get("dataNascimento").getAsString());
-			} catch (DatatypeConfigurationException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			  date = DatatypeFactory.newInstance()
+		    .newXMLGregorianCalendar(
+		        new GregorianCalendar(Integer.parseInt(split[0]),Integer.parseInt(split[1]),Integer.parseInt(split[2])));
+			} catch (DatatypeConfigurationException e) {
+			  // TODO Auto-generated catch block
+			  e.printStackTrace();
 			}
 
-			novoCliente.setDataNascimento(date2);
+			novoCliente.setDataNascimento(date);
 			listaClientes.add(novoCliente);
 		}
 
@@ -458,6 +490,7 @@ public class Interpretador {
 
 			e.printStackTrace();
 		}
+		
 	}
 	
 	public static void excluirProdutos(String id) {
