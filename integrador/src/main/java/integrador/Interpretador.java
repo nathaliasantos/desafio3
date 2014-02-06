@@ -103,6 +103,11 @@ public class Interpretador {
 		return n.getNotaFiscalResourcePort();
 	}
 
+	private String asdString(Cliente c) {
+		return c.getId() + "/" + c.getCelular() + "/" + c.getCpf() + "/"
+				+ c.getEmail() + "/" + c.getNome();
+	}
+
 	private class ThreadClient implements Runnable {
 		@Override
 		public void run() {
@@ -114,9 +119,16 @@ public class Interpretador {
 
 			ArrayList<Cliente> clientesFaturamento = (ArrayList) criaClienteResourcePortType()
 					.list();
+
+			for (Cliente a : clientesFaturamento){
+				System.out.println(asdString(a));
+			}
+			System.out.println("//////////////////////");
+			for (Cliente a : clientesCaptacao){
+				System.out.println(asdString(a));
+			}
 			ArrayList<Cliente> clientesNovos;
-			clientesNovos = ListaUtils.listaAdicionar(clientesFaturamento,
-					clientesCaptacao);
+			clientesNovos = listaAdicionar(clientesFaturamento,	clientesCaptacao);
 
 			ArrayList<Cliente> clientesExcluidos;
 			clientesExcluidos = ListaUtils.listaDeletar(clientesFaturamento,
@@ -437,4 +449,30 @@ public class Interpretador {
 		}
 	}
 
+	private boolean igual (Cliente a , Cliente b){
+			return a.getId() == b.getId();
+	}
+	
+	public ArrayList<Cliente> diferenca(ArrayList<Cliente> list1, ArrayList<Cliente> list2) {
+		ArrayList<Cliente> list = new ArrayList<Cliente>();
+		for (Cliente a :list1)
+		{
+			boolean existe = false;
+			for (Cliente b : list2){
+				if (igual(a,b))
+					existe = true;
+			}
+			if (!existe)
+				list.add(a);
+		}			
+		return list;
+	}
+
+	public ArrayList<Cliente> listaAdicionar(ArrayList<Cliente> antiga, ArrayList<Cliente> nova) {
+		return diferenca(nova, antiga);
+	}
+
+	public ArrayList<Cliente> listaDeletar(ArrayList<Cliente> antiga, ArrayList<Cliente> nova) {
+		return diferenca(antiga, nova);
+	}
 }
