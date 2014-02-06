@@ -53,8 +53,8 @@ public class Interpretador {
 		
 		Cliente c1 = new Cliente();
 		c1.setCelular("999999999");
-		c1.setId((long)28);
-		c1.setNome("TESTEID28");
+		c1.setId((long)30);
+		c1.setNome("TESTEID30");
 		c1.setCpf("111.111.111-11");
 		c1.setEmail("joaninha@teste.com");
 		c1.setDataNascimento(today);
@@ -62,7 +62,7 @@ public class Interpretador {
 		
 		ClienteResourcePortType c =  criaClienteResourcePortType();
 		c.create(c1);
-		System.out.println("fdasdfasdfasdfadsf");
+		System.out.println("cliente adicionado no faturamento");
 		
 //		ClienteResourcePortType c =  criaClienteResourcePortType();
 //		c.delete((long)25);
