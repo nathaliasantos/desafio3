@@ -38,7 +38,13 @@ public class Interpretador {
 
 	ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 
+	public static void main(String[] args) {
+		new Interpretador();
+	}
 	public Interpretador() {
+		ThreadClient a = new ThreadClient();
+		a.run();
+		/*
 		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(
 				3);
 		executor.scheduleAtFixedRate(new ThreadClient(), 0, 5000,
@@ -46,7 +52,7 @@ public class Interpretador {
 		executor.scheduleAtFixedRate(new ThreadProduto(), 100, 5000,
 				TimeUnit.MILLISECONDS);
 		executor.scheduleAtFixedRate(new ThreadPedido(), 200, 5000,
-				TimeUnit.MILLISECONDS);
+				TimeUnit.MILLISECONDS);*/
 	}
 
 	private void adicionaNovosClientes(ArrayList<Cliente> clientesNovos) {
@@ -139,41 +145,41 @@ public class Interpretador {
 					.list();
 
 			for (Pedido pedido : pedidoCaptacao) {
-				if (pedido.notaFiscal != null)
+				if (pedido.getNotaFiscal() != null)
 					pedidoCaptacao.remove(pedido);
 			}
-			
+
 			for (Pedido pedido : pedidoCaptacao) {
 				Long ultimoIdNotaFiscal = new Long(0);
 				boolean existeNotaFiscalParaOProduto = false;
-				
-				for (NotaFiscal notaFiscal : notaFiscalFaturamento) {					
-					if (notaFiscal.getPedido() == pedido.id){
+
+				for (NotaFiscal notaFiscal : notaFiscalFaturamento) {
+					if (notaFiscal.getPedido() == pedido.getId()) {
 						existeNotaFiscalParaOProduto = true;
 						if (notaFiscal.getStatus() == Status.PROCESSADA) {
-							criaNotaFiscalResourcePortType().delete(notaFiscal.getId());
+							criaNotaFiscalResourcePortType().delete(
+									notaFiscal.getId());
 							notaFiscal.setStatus(Status.EMITIDA);
 							criaNotaFiscalResourcePortType().create(notaFiscal);
-							
+
 							Long idNotaFiscal = notaFiscal.getId();
-							pedido.notaFiscal = idNotaFiscal;
-							//removerPedidoDesatualizado(Long idDoPedido)
-							//adicionarNovoPedido(Pedido pedido)
-							
-							//perguntar o que é nota fiscalLink
-						}					    
+							pedido.setNotaFiscal(idNotaFiscal);
+							// removerPedidoDesatualizado(Long idDoPedido)
+							// adicionarNovoPedido(Pedido pedido)
+
+							// perguntar o que é nota fiscalLink
+						}
 					}
 					if (notaFiscal.getId() > ultimoIdNotaFiscal)
 						ultimoIdNotaFiscal = new Long(notaFiscal.getId());
 				}
-				if (!existeNotaFiscalParaOProduto)				
-				{
+				if (!existeNotaFiscalParaOProduto) {
 					NotaFiscal novaNotaFiscal = new NotaFiscal();
 					novaNotaFiscal.setId(ultimoIdNotaFiscal);
 					novaNotaFiscal.setNumero(new Long(0));
-					novaNotaFiscal.setPedido(pedido.id);
+					novaNotaFiscal.setPedido(pedido.getId());
 					novaNotaFiscal.setStatus(null);
-										
+
 					criaNotaFiscalResourcePortType().create(novaNotaFiscal);
 				}
 			}
@@ -185,26 +191,23 @@ public class Interpretador {
 		for (int i = 0; i < lista.size(); i++) {
 			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
 			Cliente novoCliente = new Cliente();
-			novoCliente.setId(new Long(Integer.parseInt(objetoAtual.get("id")
-					.getAsString())));
+			novoCliente.setId(Long.parseLong(objetoAtual.get("id")
+					.getAsString()));
 			novoCliente.setCelular(objetoAtual.get("celular").getAsString());
 			novoCliente.setCpf(objetoAtual.get("cpf").getAsString());
 			novoCliente.setEmail(objetoAtual.get("email").getAsString());
 			novoCliente.setNome(objetoAtual.get("nome").getAsString());
 
-			Date data = new Date(objetoAtual.get("dataNascimento")
-					.getAsString());
-			GregorianCalendar c = new GregorianCalendar();
-			c.setTime(data);
+			System.out.println(objetoAtual.get("dataNascimento").getAsString());
+			
 			XMLGregorianCalendar date2 = null;
 			try {
-				date2 = DatatypeFactory.newInstance()
-						.newXMLGregorianCalendar(c);
-			} catch (DatatypeConfigurationException e) {
+				date2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(objetoAtual.get("dataNascimento").getAsString());
+			} catch (DatatypeConfigurationException e1) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e1.printStackTrace();
 			}
-
+			
 			novoCliente.setDataNascimento(date2);
 			listaClientes.add(novoCliente);
 		}
@@ -216,7 +219,19 @@ public class Interpretador {
 		ArrayList<Object> listaProdutos = new ArrayList<Object>();
 		for (int i = 0; i < lista.size(); i++) {
 			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
+			Produto novoProduto = new Produto();
+			novoProduto.setId(Long.parseLong(objetoAtual.get("id")
+					.getAsString()));			
+			novoProduto.setNome(objetoAtual.get("nome").getAsString());
+			novoProduto.setDepartamento(objetoAtual.get("departamento").getAsString());
+			novoProduto.setFabricante(objetoAtual.get("fabricante").getAsString());
+			novoProduto.setTamanho(objetoAtual.get("tamanho").getAsString());
+			novoProduto.setUrlImage(objetoAtual.get("urlImage").getAsString());
+			novoProduto.setItemExclusivo(new Boolean(objetoAtual.get("itemExclusivo").getAsString()));
+			novoProduto.setDataValidade(objetoAtual.get("dataValidade").getAsString());
+			novoProduto.setPrecoDeCusto(Long.parseLong(objetoAtual.get("dataValidade").getAsString()));
 
+			listaProdutos.add(novoProduto);
 		}
 
 		return listaProdutos;
@@ -226,6 +241,16 @@ public class Interpretador {
 		ArrayList<Object> listaPedidos = new ArrayList<Object>();
 		for (int i = 0; i < lista.size(); i++) {
 			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
+			Pedido novoPedido = new Pedido();
+			novoPedido.setId(Long.parseLong(objetoAtual.get("id").getAsString()));
+			novoPedido.setLote(Long.parseLong(objetoAtual.get("lote").getAsString()));
+			novoPedido.setNotaFiscal(Long.parseLong(objetoAtual.get("notaFiscal").getAsString()));
+			novoPedido.setStatus(objetoAtual.get("fabricante").getAsString());
+			novoPedido.setItens(null); // TODO fazer
+			novoPedido.setNotaFiscalLink(objetoAtual.get("notaFiscalLink").getAsString());
+			novoPedido.setLoteLink(new Boolean(objetoAtual.get("loteLink").getAsString()));
+			
+			listaPedidos.add(novoPedido);
 		}
 
 		return listaPedidos;
@@ -252,10 +277,8 @@ public class Interpretador {
 			while ((output = br.readLine()) != null) {
 				total += output;
 			}
-			JsonObject retornoJson = (JsonObject) (new JsonParser())
-					.parse(total);
 
-			JsonArray lista = retornoJson.getAsJsonArray();
+			JsonArray lista = (JsonArray) (new JsonParser()).parse(total);;
 
 			conn.disconnect();
 			if (tipo == CLIENTE)
@@ -274,75 +297,74 @@ public class Interpretador {
 
 	}
 
-	public static void adicionarNovosProdutos(List<Produto> novosProdutos){
-		 try {
-				URL url = new URL("http://dls98:8181/captacao/api/produtos.json");
-				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-				conn.setDoOutput(true);
-				conn.setRequestMethod("POST");
-				conn.setRequestProperty("Content-Type", "application/json");
-		 
-				OutputStream os = conn.getOutputStream();
-				
-				JsonObject json = new JsonObject();
-				
-				for (Produto produto : novosProdutos)
-				{
-					json.addProperty("id", produto.getId());
-					json.addProperty("nome", produto.getNome());
-					json.addProperty("departamento", produto.getDepartamento());
-					json.addProperty("fabricante", produto.getFabricante());
-					json.addProperty("precoDeCusto", produto.getPrecoDeCusto());
-					json.addProperty("dataValidade", produto.getDataValidade());
-					json.addProperty("tamanho", produto.getTamanho());
-					json.addProperty("urlImage", produto.getUrlImage());
-					json.addProperty("itemExclusivo", produto.isItemExclusivo());
-					
-					os.write(json.toString().getBytes()); 
-					os.flush();	
-				}
-		 
-				if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
-					throw new RuntimeException("Failed : HTTP error code : "
+	public static void adicionarNovosProdutos(List<Produto> novosProdutos) {
+		try {
+			URL url = new URL("http://dls98:8181/captacao/api/produtos.json");
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/json");
+
+			OutputStream os = conn.getOutputStream();
+
+			JsonObject json = new JsonObject();
+
+			for (Produto produto : novosProdutos) {
+				json.addProperty("id", produto.getId());
+				json.addProperty("nome", produto.getNome());
+				json.addProperty("departamento", produto.getDepartamento());
+				json.addProperty("fabricante", produto.getFabricante());
+				json.addProperty("precoDeCusto", produto.getPrecoDeCusto());
+				json.addProperty("dataValidade", produto.getDataValidade());
+				json.addProperty("tamanho", produto.getTamanho());
+				json.addProperty("urlImage", produto.getUrlImage());
+				json.addProperty("itemExclusivo", produto.isItemExclusivo());
+
+				os.write(json.toString().getBytes());
+				os.flush();
+			}
+
+			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+				throw new RuntimeException("Failed : HTTP error code : "
 						+ conn.getResponseCode());
-				}
-		 
-				BufferedReader br = new BufferedReader(new InputStreamReader(
-						(conn.getInputStream())));
-		 
-				String output;
-				System.out.println("Output from Server .... \n");
-				while ((output = br.readLine()) != null) {
-					System.out.println(output);
-				}
-				conn.disconnect();
-				
-			}catch (MalformedURLException e) {
-			
-				e.printStackTrace();
-			
-			} catch (IOException e) {
-			
-				e.printStackTrace();
 			}
-	}
-	
-	public static void excluirProdutos(String id){
-		 try {
-				URL url = new URL("http://dls98:8181/captacao/api/produtos?id="+ id);
-				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-				conn.setRequestMethod("DELETE");
-				conn.disconnect();
-				
-			}catch (MalformedURLException e) {
-			
-				e.printStackTrace();
-			
-			} catch (IOException e) {
-			
-				e.printStackTrace();
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					(conn.getInputStream())));
+
+			String output;
+			System.out.println("Output from Server .... \n");
+			while ((output = br.readLine()) != null) {
+				System.out.println(output);
 			}
+			conn.disconnect();
+
+		} catch (MalformedURLException e) {
+
+			e.printStackTrace();
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
 	}
-	
+
+	public static void excluirProdutos(String id) {
+		try {
+			URL url = new URL("http://dls98:8181/captacao/api/produtos?id="
+					+ id);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("DELETE");
+			conn.disconnect();
+
+		} catch (MalformedURLException e) {
+
+			e.printStackTrace();
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+	}
 
 }
