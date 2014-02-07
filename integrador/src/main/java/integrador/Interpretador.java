@@ -3,40 +3,27 @@ package integrador;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import soa32.resources.cliente.Cliente;
-import soa32.resources.cliente.ClienteResource;
-import soa32.resources.cliente.ClienteResourcePortType;
 import soa32.resources.notaFiscal.NotaFiscal;
-import soa32.resources.notaFiscal.NotaFiscalResource;
-import soa32.resources.notaFiscal.NotaFiscalResourcePortType;
 import soa32.resources.notaFiscal.Status;
 import soa32.resources.produto.Produto;
-import soa32.resources.produto.ProdutoResource;
-import soa32.resources.produto.ProdutoResourcePortType;
+import Utils.ClienteUtils;
 import Utils.ListaUtils;
+import Utils.NotaFiscalUtils;
+import Utils.PedidoUtils;
+import Utils.ProdutoUtils;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class Interpretador {
-
-	ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 
 	public static void main(String[] args) {
 		new Interpretador();
@@ -54,36 +41,6 @@ public class Interpretador {
 
 	}
 
-	private void adicionaNovosClientes(ArrayList<Cliente> clientesNovos) {
-		ClienteResource c = new ClienteResource();
-		ClienteResourcePortType cl = c.getClienteResourcePort();
-		for (Cliente cliente : clientesNovos) {
-			System.out.println("CRIAR: " + cliente.getDataNascimento());
-			cl.create(cliente);
-		}
-	}
-
-	private static ClienteResourcePortType criaClienteResourcePortType() {
-		ClienteResource c = new ClienteResource();
-		return c.getClienteResourcePort();
-	}
-
-	private ProdutoResourcePortType criaProdutoResourcePortType() {
-		ProdutoResource p = new ProdutoResource();
-		return p.getProdutoResourcePort();
-	}
-
-	private NotaFiscalResourcePortType criaNotaFiscalResourcePortType() {
-		NotaFiscalResource n = new NotaFiscalResource();
-		return n.getNotaFiscalResourcePort();
-	}
-
-	private String printaCliente(Cliente c) {
-		return c.getId() + "/" + c.getCelular() + "/" + c.getCpf() + "/"
-				+ c.getEmail() + "/" + c.getNome() + "/"
-				+ c.getDataNascimento();
-	}
-
 	private class ThreadClient implements Runnable {
 		@Override
 		public void run() {
@@ -93,37 +50,38 @@ public class Interpretador {
 			for (int i = 0; i < clientesCaptacaoObject.size(); i++)
 				clientesCaptacao.add((Cliente) clientesCaptacaoObject.get(i));
 
-			ArrayList<Cliente> clientesFaturamento = (ArrayList) criaClienteResourcePortType()
+			ArrayList<Cliente> clientesFaturamento = (ArrayList) ClienteUtils.criaClienteResourcePortType()
 					.list();
 
 			System.out.println("CLIENTES FATURAMENTO ANTES: ");
 			for (Cliente a : clientesFaturamento) {
-				System.out.println(printaCliente(a));
+				System.out.println(ClienteUtils.printaCliente(a));
 			}
 
 			System.out.println("CLIENTES CAPTACAO ANTES: ");
 			for (Cliente a : clientesCaptacao) {
-				System.out.println(printaCliente(a));
+				System.out.println(ClienteUtils.printaCliente(a));
 			}
 
-			System.out.println("CLIENTE PARA ADD: ");
+			
 			ArrayList<Cliente> clientesNovos;
 			clientesNovos = ListaUtils.listaAdicionarCliente(
 					clientesFaturamento, clientesCaptacao);
 
+			System.out.println("CLIENTE PARA ADD: ");
 			for (Cliente a : clientesNovos) {
-				System.out.println(printaCliente(a));
+				System.out.println(ClienteUtils.printaCliente(a));
 			}
 
-			adicionaNovosClientes(clientesNovos);
+			ClienteUtils.adicionarNovosClientes(clientesNovos);
 
-			System.out.println("CLIENTES FATURAMENTO NOVOS: ");
+			System.out.println("CLIENTES FATURAMENTO DEPOIS: ");
 			for (Cliente a : clientesFaturamento) {
-				System.out.println(printaCliente(a));
+				System.out.println(ClienteUtils.printaCliente(a));
 			}
-			System.out.println("CLIENTES CAPTACAO NOVOS: ");
+			System.out.println("CLIENTES CAPTACAO DEPOIS: ");
 			for (Cliente a : clientesCaptacao) {
-				System.out.println(printaCliente(a));
+				System.out.println(ClienteUtils.printaCliente(a));
 			}
 		}
 	}
@@ -139,13 +97,39 @@ public class Interpretador {
 			for (int i = 0; i < produtosCaptacaoObject.size(); i++)
 				produtosCaptacao.add((Produto) produtosCaptacaoObject.get(i));
 
-			ArrayList<Produto> produtosFaturamento = (ArrayList) criaProdutoResourcePortType().list();
+			ArrayList<Produto> produtosFaturamento = (ArrayList) ProdutoUtils.criaProdutoResourcePortType().list();
+			
+			System.out.println("PRODUTO FATURAMENTO ANTES: ");
+			for (Produto a : produtosFaturamento) {
+				System.out.println(ProdutoUtils.printaProduto(a));
+			}
+
+			System.out.println("PRODUTO CAPTACAO ANTES: ");
+			for (Produto a : produtosCaptacao) {
+				System.out.println(ProdutoUtils.printaProduto(a));
+			}
 			
 			ArrayList<Produto> produtosNovos;
 			produtosNovos = ListaUtils.listaAdicionarProduto(produtosCaptacao,
 					produtosFaturamento);
-			adicionarNovosProdutos(produtosNovos);
-		}
+			
+			System.out.println("PRODUTO ADD: ");
+			for (Produto a : produtosNovos) {
+				System.out.println(ProdutoUtils.printaProduto(a));
+			}
+			
+			ProdutoUtils.adicionarNovosProdutos(produtosNovos);
+			
+			System.out.println("PRODUTO FATURAMENTO DEPOIS: ");
+			for (Produto a : produtosFaturamento) {
+				System.out.println(ProdutoUtils.printaProduto(a));
+			}
+
+			System.out.println("PRODUTO CAPTACAO DEPOIS: ");
+			for (Produto a : produtosCaptacao) {
+				System.out.println(ProdutoUtils.printaProduto(a));
+			}
+		}		
 	}
 
 	private class ThreadPedido implements Runnable {
@@ -157,7 +141,7 @@ public class Interpretador {
 			for (int i = 0; i < pedidoCaptacaoObject.size(); i++)
 				pedidoCaptacao.add((Pedido) pedidoCaptacaoObject.get(i));
 
-			ArrayList<NotaFiscal> notaFiscalFaturamento = (ArrayList) criaNotaFiscalResourcePortType()
+			ArrayList<NotaFiscal> notaFiscalFaturamento = (ArrayList) NotaFiscalUtils.criaNotaFiscalResourcePortType()
 					.list();
 
 			for (Pedido pedido : pedidoCaptacao) {
@@ -173,10 +157,10 @@ public class Interpretador {
 					if (notaFiscal.getPedido() == pedido.getId()) {
 						existeNotaFiscalParaOProduto = true;
 						if (notaFiscal.getStatus() == Status.PROCESSADA) {
-							criaNotaFiscalResourcePortType().delete(
+							NotaFiscalUtils.criaNotaFiscalResourcePortType().delete(
 									notaFiscal.getId());
 							notaFiscal.setStatus(Status.EMITIDA);
-							criaNotaFiscalResourcePortType().create(notaFiscal);
+							NotaFiscalUtils.criaNotaFiscalResourcePortType().create(notaFiscal);
 
 							Long idNotaFiscal = notaFiscal.getId();
 							pedido.setNotaFiscal(idNotaFiscal);
@@ -196,94 +180,10 @@ public class Interpretador {
 					novaNotaFiscal.setPedido(pedido.getId());
 					novaNotaFiscal.setStatus(null);
 
-					criaNotaFiscalResourcePortType().create(novaNotaFiscal);
+					NotaFiscalUtils.criaNotaFiscalResourcePortType().create(novaNotaFiscal);
 				}
 			}
 		}
-	}
-
-	private ArrayList<Object> transformIntoCliente(JsonArray lista) {
-		ArrayList<Object> listaClientes = new ArrayList<Object>();
-		for (int i = 0; i < lista.size(); i++) {
-			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
-			Cliente novoCliente = new Cliente();
-			novoCliente.setId(Long.parseLong(objetoAtual.get("id")
-					.getAsString()));
-			novoCliente.setCelular(objetoAtual.get("celular").getAsString());
-			novoCliente.setCpf(objetoAtual.get("cpf").getAsString());
-			novoCliente.setEmail(objetoAtual.get("email").getAsString());
-			novoCliente.setNome(objetoAtual.get("nome").getAsString());
-
-			String[] split = objetoAtual.get("dataNascimento").getAsString()
-					.split("T")[0].split("-");
-
-			XMLGregorianCalendar date = null;
-			try {
-				date = DatatypeFactory.newInstance().newXMLGregorianCalendar(
-						new GregorianCalendar(Integer.parseInt(split[0]),
-								Integer.parseInt(split[1]), Integer
-										.parseInt(split[2])));
-			} catch (DatatypeConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			novoCliente.setDataNascimento(date);
-			listaClientes.add(novoCliente);
-		}
-
-		return listaClientes;
-	}
-
-	private ArrayList<Object> transformIntoProduto(JsonArray lista) {
-		ArrayList<Object> listaProdutos = new ArrayList<Object>();
-		for (int i = 0; i < lista.size(); i++) {
-			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
-			Produto novoProduto = new Produto();
-			novoProduto.setId(Long.parseLong(objetoAtual.get("id")
-					.getAsString()));
-			novoProduto.setNome(objetoAtual.get("nome").getAsString());
-			novoProduto.setDepartamento(objetoAtual.get("departamento")
-					.getAsString());
-			novoProduto.setFabricante(objetoAtual.get("fabricante")
-					.getAsString());
-			novoProduto.setTamanho(objetoAtual.get("tamanho").getAsString());
-			novoProduto.setUrlImage(objetoAtual.get("urlImage").getAsString());
-			novoProduto.setItemExclusivo(new Boolean(objetoAtual.get(
-					"itemExclusivo").getAsString()));
-			novoProduto.setDataValidade(objetoAtual.get("dataValidade")
-					.getAsString());
-			novoProduto.setPrecoDeCusto(Long.parseLong(objetoAtual.get(
-					"dataValidade").getAsString()));
-
-			listaProdutos.add(novoProduto);
-		}
-
-		return listaProdutos;
-	}
-
-	private ArrayList<Object> transformIntoPedido(JsonArray lista) {
-		ArrayList<Object> listaPedidos = new ArrayList<Object>();
-		for (int i = 0; i < lista.size(); i++) {
-			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
-			Pedido novoPedido = new Pedido();
-			novoPedido.setId(Long
-					.parseLong(objetoAtual.get("id").getAsString()));
-			novoPedido.setLote(Long.parseLong(objetoAtual.get("lote")
-					.getAsString()));
-			novoPedido.setNotaFiscal(Long.parseLong(objetoAtual.get(
-					"notaFiscal").getAsString()));
-			novoPedido.setStatus(objetoAtual.get("fabricante").getAsString());
-			novoPedido.setItens(null); // TODO fazer
-			novoPedido.setNotaFiscalLink(objetoAtual.get("notaFiscalLink")
-					.getAsString());
-			novoPedido.setLoteLink(new Boolean(objetoAtual.get("loteLink")
-					.getAsString()));
-
-			listaPedidos.add(novoPedido);
-		}
-
-		return listaPedidos;
 	}
 
 	private final int CLIENTE = 1, PRODUTO = 2, PEDIDO = 3;
@@ -312,11 +212,11 @@ public class Interpretador {
 
 			conn.disconnect();
 			if (tipo == CLIENTE)
-				return transformIntoCliente(lista);
+				return ClienteUtils.jsonParaCliente(lista);
 			if (tipo == PRODUTO)
-				return transformIntoProduto(lista);
+				return ProdutoUtils.jsonParaProduto(lista);
 			if (tipo == PEDIDO)
-				return transformIntoPedido(lista);
+				return PedidoUtils.jsonParaPedido(lista);
 
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -327,49 +227,4 @@ public class Interpretador {
 
 	}
 
-
-	public static void adicionarNovosProdutos(ArrayList<Produto> novosProdutos) {
-
-		try {
-			URL url = new URL("http://dls98:8181/captacao/api/produtos.json");
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setDoOutput(true);
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Content-Type", "application/json");
-
-			OutputStream os = conn.getOutputStream();
-
-			JsonObject json = new JsonObject();
-
-			for (Produto produto : novosProdutos) {
-				
-				json.addProperty("id", produto.getId());
-				json.addProperty("nome", produto.getNome());
-				json.addProperty("departamento", produto.getDepartamento());
-				json.addProperty("fabricante", produto.getFabricante());
-				json.addProperty("precoDeCusto", produto.getPrecoDeCusto());
-				json.addProperty("dataValidade", produto.getDataValidade());
-				json.addProperty("tamanho", produto.getTamanho());
-				json.addProperty("urlImage", produto.getUrlImage());
-				json.addProperty("itemExclusivo", produto.isItemExclusivo());
-
-				os.write(json.toString().getBytes());
-				os.flush();
-			}
-
-			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
-				throw new RuntimeException("Failed : HTTP error code : "
-						+ conn.getResponseCode());
-			}
-			conn.disconnect();
-		} catch (MalformedURLException e) {
-
-			e.printStackTrace();
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
-
-	}
 }
