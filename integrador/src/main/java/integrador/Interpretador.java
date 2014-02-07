@@ -116,8 +116,8 @@ public class Interpretador {
 
 			System.out.println("CLIENTE PARA ADD: ");
 			ArrayList<Cliente> clientesNovos;
-			clientesNovos = listaAdicionar(clientesFaturamento,
-					clientesCaptacao);
+			clientesNovos = ListaUtils.listaAdicionarCliente(
+					clientesFaturamento, clientesCaptacao);
 
 			for (Cliente a : clientesNovos) {
 				System.out.println(printaCliente(a));
@@ -141,18 +141,18 @@ public class Interpretador {
 		public void run() {
 			ArrayList<Object> produtosCaptacaoObject = getListFromUrl(
 					"/captacao/api/produtos.json", PRODUTO);
+			
 			ArrayList<Produto> produtosCaptacao = new ArrayList<Produto>();
+			
 			for (int i = 0; i < produtosCaptacaoObject.size(); i++)
 				produtosCaptacao.add((Produto) produtosCaptacaoObject.get(i));
 
-			ArrayList<Produto> produtosFaturamento = (ArrayList) criaProdutoResourcePortType()
-					.list();
+			ArrayList<Produto> produtosFaturamento = (ArrayList) criaProdutoResourcePortType().list();
+			
 			ArrayList<Produto> produtosNovos;
 			produtosNovos = ListaUtils.listaAdicionarProduto(produtosCaptacao,
 					produtosFaturamento);
-
 			adicionarNovosProdutos(produtosNovos);
-			// deletaProdutos(produtosExcluidos);
 		}
 	}
 
@@ -317,7 +317,6 @@ public class Interpretador {
 			}
 
 			JsonArray lista = (JsonArray) (new JsonParser()).parse(total);
-			;
 
 			conn.disconnect();
 			if (tipo == CLIENTE)
@@ -336,9 +335,9 @@ public class Interpretador {
 
 	}
 
-	
 
 	public static void adicionarNovosProdutos(ArrayList<Produto> novosProdutos) {
+
 		try {
 			URL url = new URL("http://dls98:8181/captacao/api/produtos.json");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -381,7 +380,6 @@ public class Interpretador {
 		}
 
 	}
-	
 	public static void adicionarNovosProdutosT() {
 
 	}
@@ -415,15 +413,9 @@ public class Interpretador {
 			e.printStackTrace();
 		}
 	}
-<<<<<<< HEAD
-	
-	private boolean igual (Cliente a , Cliente b){
-			return a.getId() == b.getId();
-=======
 
 	private boolean igual(Cliente a, Cliente b) {
 		return a.getId() == b.getId();
->>>>>>> 80994bc408dec88905d975966d73cadcc7e27277
 	}
 
 	public ArrayList<Cliente> diferenca(ArrayList<Cliente> list1,
@@ -450,4 +442,5 @@ public class Interpretador {
 			ArrayList<Cliente> nova) {
 		return diferenca(antiga, nova);
 	}
+
 }

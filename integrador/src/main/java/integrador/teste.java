@@ -55,21 +55,6 @@ public class teste {
 			System.out.println(cliente.getId());
 		}
 	}
-<<<<<<< HEAD
-	
-	Produto prod = new Produto();
-	prod.setId(42L);
-	prod.setNome("TESTE ID COM PREÇO");
-	prod.setPrecoDeCusto(100L);
-	prod.setDepartamento("Departamento");
-	prod.setFabricante("Fabricante");
-	
-	ArrayList<Produto> a = new ArrayList<Produto>();
-	a.add(prod);
-	Interpretador.adicionarNovosProdutos(a);
-	//Interpretador.excluirProdutos("15");
-=======
->>>>>>> 80994bc408dec88905d975966d73cadcc7e27277
 
 	private static void listarNotasFiscais() {
 		NotaFiscalResource n = new NotaFiscalResource();
@@ -103,7 +88,7 @@ public class teste {
 		adicionarNovosClientesNaCaptacaoParaTeste(c1);
 	}
 
-	public static void adicionarNovosClientesNaCaptacaoParaTeste(Cliente cliente) {
+	public static void adicionarNovosClientesNaCaptacaoParaTeste(Cliente cliente){
 		try {
 			URL url = new URL("http://dls98:8181/captacao/api/clientes.json");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -151,4 +136,5 @@ public class teste {
 		}
 	}
 
+	
 }
