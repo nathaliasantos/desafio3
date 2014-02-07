@@ -9,18 +9,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import soa32.resources.cliente.Cliente;
-import soa32.resources.cliente.ClienteResource;
-import soa32.resources.cliente.ClienteResourcePortType;
 import soa32.resources.notaFiscal.NotaFiscal;
-import soa32.resources.notaFiscal.NotaFiscalResource;
-import soa32.resources.notaFiscal.NotaFiscalResourcePortType;
 import soa32.resources.produto.Produto;
 import Utils.ClienteUtils;
 import Utils.NotaFiscalUtils;
@@ -38,10 +33,10 @@ public class teste {
 		
 	//	for (int i=50;;i++)
 	//	{
-		//	listarClientes();
 			//criarClientePadraoParaTeste();
 			
-			//listarClientes();
+		//	listarClientes();
+		//ClienteUtils.criaClienteResourcePortType().delete((long)27);
 			
 			
 	//	}
@@ -52,7 +47,7 @@ public class teste {
 		ArrayList<Produto> listaProduto = (ArrayList<Produto>) ProdutoUtils.criaProdutoResourcePortType().list();
 		System.out.println("listagem do numero dos produtos:");
 		for (Produto produto : listaProduto) {
-			System.out.println(produto.getNome());
+			System.out.println(produto.getTamanho());
 		}
 	}
 
@@ -60,7 +55,7 @@ public class teste {
 		ArrayList<Cliente> listaCliente = (ArrayList<Cliente>) ClienteUtils.criaClienteResourcePortType().list();
 		System.out.println("listagem do nome dos clientes:");
 		for (Cliente cliente : listaCliente) {
-			System.out.println(cliente.getCelular());
+			System.out.println(cliente.getId());
 		}
 	}
 

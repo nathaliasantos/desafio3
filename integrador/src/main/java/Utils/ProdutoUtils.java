@@ -17,6 +17,7 @@ import com.google.gson.JsonObject;
 
 public class ProdutoUtils {
 	public static void adicionarNovosProdutos(ArrayList<Produto> novosProdutos) {
+		if (novosProdutos.size() > 0)
 		try {
 			URL url = new URL("http://dls98:8181/captacao/api/produtos.json");
 			HttpURLConnection conn = criaConexao(url);
@@ -80,19 +81,30 @@ public class ProdutoUtils {
 
 	private static Produto criaProdutoPeloJson(JsonObject objetoAtual) {
 		Produto novoProduto = new Produto();
-		novoProduto.setId(Long.parseLong(objetoAtual.get("id").getAsString()));
-		novoProduto.setNome(objetoAtual.get("nome").getAsString());
-		novoProduto.setDepartamento(objetoAtual.get("departamento")
-				.getAsString());
-		novoProduto.setFabricante(objetoAtual.get("fabricante").getAsString());
-		novoProduto.setTamanho(objetoAtual.get("tamanho").getAsString());
-		novoProduto.setUrlImage(objetoAtual.get("urlImage").getAsString());
-		novoProduto.setItemExclusivo(new Boolean(objetoAtual.get(
-				"itemExclusivo").getAsString()));
-		novoProduto.setDataValidade(objetoAtual.get("dataValidade")
-				.getAsString());
-		novoProduto.setPrecoDeCusto(Long.parseLong(objetoAtual.get(
-				"dataValidade").getAsString()));
+		if (objetoAtual.get("id") != null)
+			novoProduto.setId(Long.parseLong(objetoAtual.get("id")
+					.getAsString()));
+		if (objetoAtual.get("nome") != null)
+			novoProduto.setNome(objetoAtual.get("nome").getAsString());
+		if (objetoAtual.get("departamento") != null)
+			novoProduto.setDepartamento(objetoAtual.get("departamento")
+					.getAsString());
+		if (objetoAtual.get("fabricante") != null)
+			novoProduto.setFabricante(objetoAtual.get("fabricante")
+					.getAsString());
+		if (objetoAtual.get("tamanho") != null)
+			novoProduto.setTamanho(objetoAtual.get("tamanho").getAsString());
+		if (objetoAtual.get("urlImage") != null)
+			novoProduto.setUrlImage(objetoAtual.get("urlImage").getAsString());
+		if (objetoAtual.get("itemExclusivo") != null)
+			novoProduto.setItemExclusivo(new Boolean(objetoAtual.get(
+					"itemExclusivo").getAsString()));
+		if (objetoAtual.get("dataValidade") != null)
+			novoProduto.setDataValidade(objetoAtual.get("dataValidade")
+					.getAsString());
+		if (objetoAtual.get("precoDeCusto") != null)
+			novoProduto.setPrecoDeCusto(Long.parseLong(objetoAtual.get(
+					"precoDeCusto").getAsString()));
 		return novoProduto;
 	}
 
