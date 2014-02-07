@@ -15,33 +15,25 @@ public class ListaUtilsTest extends TestCase {
 	public void testeListaAdicionarCliente(){
 		
 		Cliente c1 = new Cliente();
-		c1.setId(1L);
-		
 		Cliente c2 = new Cliente();
-		c2.setId(2L);
-		
 		Cliente c3 = new Cliente();
-		c3.setId(3L);
-		
 		Cliente c4 = new Cliente();
-		c4.setId(4L);
-		
 		Cliente c5 = new Cliente();
-		c5.setId(5L);
-		
-		Cliente c6 = new Cliente();
-		c6.setId(6L);
-		
+		Cliente c6 = new Cliente();		
 		Cliente c7 = new Cliente();
-		c7.setId(7L);
-		
 		Cliente c8 = new Cliente();
-		c8.setId(8L);
-		
 		Cliente c9 = new Cliente();
-		c9.setId(9L);
-		
 		Cliente c10 = new Cliente();
+		
+		c1.setId(1L);
+		c2.setId(2L);
+		c3.setId(3L);
+		c4.setId(4L);
+		c5.setId(5L);
+		c6.setId(6L);
+		c7.setId(7L);
+		c8.setId(8L);
+		c9.setId(9L);
 		c10.setId(10L);
 		
 		ArrayList<Cliente> nova = new ArrayList<Cliente>();
@@ -72,28 +64,20 @@ public class ListaUtilsTest extends TestCase {
 		Produto p5 = new Produto();
 		Produto p6 = new Produto();		
 		
-		p1.setId((long)1337);
-		p2.setId((long)1338);
-		p3.setId((long)1339);
-		p4.setId((long)1340);
-		p5.setId((long)1341);
-		p6.setId((long)1342);
+		p1.setId(1337L);
+		p2.setId(1338L);
+		p3.setId(1339L);
+		p4.setId(1340L);
+		p5.setId(1341L);
+		p6.setId(1342L);
 				
 		
 		ArrayList<Produto> novo = new ArrayList<Produto>();
 		ArrayList<Produto> antigo = new ArrayList<Produto>();
 		
-		antigo.add(p1);
-		antigo.add(p2);
-		antigo.add(p3);
-		antigo.add(p4);
+		antigo.addAll(Arrays.asList(p1,p2,p3,p4));
+		novo.addAll(Arrays.asList(p1,p2,p3,p4,p5,p6));
 
-		novo.add(p1);
-		novo.add(p2);
-		novo.add(p3);
-		novo.add(p4);
-		novo.add(p5);
-		novo.add(p6);	
 		
 		ArrayList<Produto> aAdicionar = new ArrayList<Produto>();
 		
