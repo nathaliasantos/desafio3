@@ -327,7 +327,9 @@ public class Interpretador {
 
 	}
 
-	public static void adicionarNovosProdutos(List<Produto> novosProdutos) {
+
+	public static void adicionarNovosProdutos(ArrayList<Produto> novosProdutos) {
+
 		try {
 			URL url = new URL("http://dls98:8181/captacao/api/produtos.json");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -340,6 +342,7 @@ public class Interpretador {
 			JsonObject json = new JsonObject();
 
 			for (Produto produto : novosProdutos) {
+				
 				json.addProperty("id", produto.getId());
 				json.addProperty("nome", produto.getNome());
 				json.addProperty("departamento", produto.getDepartamento());
@@ -358,6 +361,7 @@ public class Interpretador {
 				throw new RuntimeException("Failed : HTTP error code : "
 						+ conn.getResponseCode());
 			}
+			conn.disconnect();
 		} catch (MalformedURLException e) {
 
 			e.printStackTrace();
@@ -368,5 +372,4 @@ public class Interpretador {
 		}
 
 	}
-
 }
