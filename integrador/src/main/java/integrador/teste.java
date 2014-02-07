@@ -25,11 +25,11 @@ public static void main(String[] args) {
 	}
 	System.out.println("////////////////////////////////////////////");
 	ClienteResource c = new ClienteResource();
-	ClienteResourcePortType cl = c.getClienteResourcePort();
+	ClienteResourcePortType cl = c.getClienteResourcePort();	
 	List<Cliente> listaCliente = cl.list();
 	System.out.println("listagem do nome dos clientes:");
 	for (Cliente cliente : listaCliente) {
-		System.out.println(cliente.getNome());
+		System.out.println(cliente.getId());
 	}
 	
 	ProdutoResource p = new ProdutoResource();
@@ -50,6 +50,7 @@ public static void main(String[] args) {
 	ArrayList<Produto> a = new ArrayList<Produto>();
 	a.add(prod);
 	Interpretador.adicionarNovosProdutos(a);
+	//Interpretador.excluirProdutos("15");
 
 }
 
