@@ -108,8 +108,8 @@ public class Interpretador {
 
 			System.out.println("CLIENTE PARA ADD: ");
 			ArrayList<Cliente> clientesNovos;
-			clientesNovos = listaAdicionar(clientesFaturamento,
-					clientesCaptacao);
+			clientesNovos = ListaUtils.listaAdicionarCliente(
+					clientesFaturamento, clientesCaptacao);
 
 			for (Cliente a : clientesNovos) {
 				System.out.println(printaCliente(a));
@@ -133,22 +133,18 @@ public class Interpretador {
 		public void run() {
 			ArrayList<Object> produtosCaptacaoObject = getListFromUrl(
 					"/captacao/api/produtos.json", PRODUTO);
+			
 			ArrayList<Produto> produtosCaptacao = new ArrayList<Produto>();
+			
 			for (int i = 0; i < produtosCaptacaoObject.size(); i++)
 				produtosCaptacao.add((Produto) produtosCaptacaoObject.get(i));
 
-			ArrayList<Produto> produtosFaturamento = (ArrayList) criaProdutoResourcePortType()
-					.list();
+			ArrayList<Produto> produtosFaturamento = (ArrayList) criaProdutoResourcePortType().list();
+			
 			ArrayList<Produto> produtosNovos;
-			produtosNovos = ListaUtils.listaAdicionar(produtosCaptacao,
+			produtosNovos = ListaUtils.listaAdicionarProduto(produtosCaptacao,
 					produtosFaturamento);
-
-			ArrayList<Produto> ProdutosExcluidos;
-			ProdutosExcluidos = ListaUtils.listaDeletar(produtosCaptacao,
-					produtosFaturamento);
-
 			adicionarNovosProdutos(produtosNovos);
-			// deletaProdutos(produtosExcluidos);
 		}
 	}
 
@@ -313,7 +309,6 @@ public class Interpretador {
 			}
 
 			JsonArray lista = (JsonArray) (new JsonParser()).parse(total);
-			;
 
 			conn.disconnect();
 			if (tipo == CLIENTE)
@@ -332,9 +327,9 @@ public class Interpretador {
 
 	}
 
-	
 
-	public static void adicionarNovosProdutos(List<Produto> novosProdutos) {
+	public static void adicionarNovosProdutos(ArrayList<Produto> novosProdutos) {
+
 		try {
 			URL url = new URL("http://dls98:8181/captacao/api/produtos.json");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -347,6 +342,7 @@ public class Interpretador {
 			JsonObject json = new JsonObject();
 
 			for (Produto produto : novosProdutos) {
+				
 				json.addProperty("id", produto.getId());
 				json.addProperty("nome", produto.getNome());
 				json.addProperty("departamento", produto.getDepartamento());
@@ -365,26 +361,7 @@ public class Interpretador {
 				throw new RuntimeException("Failed : HTTP error code : "
 						+ conn.getResponseCode());
 			}
-		} catch (MalformedURLException e) {
-
-			e.printStackTrace();
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
-
-	}
-
-	public static void excluirProdutos(String id) {
-		try {
-			URL url = new URL("http://dls98:8181/captacao/api/produtos?id="
-					+ id);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("DELETE");
 			conn.disconnect();
-			int responseCode = conn.getResponseCode();
-			System.out.println("response code" + responseCode);
 		} catch (MalformedURLException e) {
 
 			e.printStackTrace();
@@ -393,34 +370,6 @@ public class Interpretador {
 
 			e.printStackTrace();
 		}
-	}
 
-	private boolean igual(Cliente a, Cliente b) {
-		return a.getId() == b.getId();
-	}
-
-	public ArrayList<Cliente> diferenca(ArrayList<Cliente> list1,
-			ArrayList<Cliente> list2) {
-		ArrayList<Cliente> list = new ArrayList<Cliente>();
-		for (Cliente a : list1) {
-			boolean existe = false;
-			for (Cliente b : list2) {
-				if (igual(a, b))
-					existe = true;
-			}
-			if (!existe)
-				list.add(a);
-		}
-		return list;
-	}
-
-	public ArrayList<Cliente> listaAdicionar(ArrayList<Cliente> antiga,
-			ArrayList<Cliente> nova) {
-		return diferenca(nova, antiga);
-	}
-
-	public ArrayList<Cliente> listaDeletar(ArrayList<Cliente> antiga,
-			ArrayList<Cliente> nova) {
-		return diferenca(antiga, nova);
 	}
 }
