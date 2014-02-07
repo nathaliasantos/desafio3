@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -18,27 +19,11 @@ public class ProdutoUtils {
 	public static void adicionarNovosProdutos(ArrayList<Produto> novosProdutos) {
 		try {
 			URL url = new URL("http://dls98:8181/captacao/api/produtos.json");
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setDoOutput(true);
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Content-Type", "application/json");
-
+			HttpURLConnection conn = criaConexao(url);
 			OutputStream os = conn.getOutputStream();
 
-			JsonObject json = new JsonObject();
-
 			for (Produto produto : novosProdutos) {
-				
-				json.addProperty("id", produto.getId());
-				json.addProperty("nome", produto.getNome());
-				json.addProperty("departamento", produto.getDepartamento());
-				json.addProperty("fabricante", produto.getFabricante());
-				json.addProperty("precoDeCusto", produto.getPrecoDeCusto());
-				json.addProperty("dataValidade", produto.getDataValidade());
-				json.addProperty("tamanho", produto.getTamanho());
-				json.addProperty("urlImage", produto.getUrlImage());
-				json.addProperty("itemExclusivo", produto.isItemExclusivo());
-
+				JsonObject json = pedidoParaJson(produto);
 				os.write(json.toString().getBytes());
 				os.flush();
 			}
@@ -58,32 +43,59 @@ public class ProdutoUtils {
 		}
 
 	}
+
+	private static HttpURLConnection criaConexao(URL url) throws IOException,
+			ProtocolException {
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setDoOutput(true);
+		conn.setRequestMethod("POST");
+		conn.setRequestProperty("Content-Type", "application/json");
+		return conn;
+	}
+
+	private static JsonObject pedidoParaJson(Produto produto) {
+		JsonObject json = new JsonObject();
+		json.addProperty("id", produto.getId());
+		json.addProperty("nome", produto.getNome());
+		json.addProperty("departamento", produto.getDepartamento());
+		json.addProperty("fabricante", produto.getFabricante());
+		json.addProperty("precoDeCusto", produto.getPrecoDeCusto());
+		json.addProperty("dataValidade", produto.getDataValidade());
+		json.addProperty("tamanho", produto.getTamanho());
+		json.addProperty("urlImage", produto.getUrlImage());
+		json.addProperty("itemExclusivo", produto.isItemExclusivo());
+		return json;
+	}
 	
-	public static ArrayList<Object> jsonParaProduto(JsonArray lista) {
+	public static ArrayList<Object> jsonArrayParaListaProduto(JsonArray lista) {
 		ArrayList<Object> listaProdutos = new ArrayList<Object>();
 		for (int i = 0; i < lista.size(); i++) {
 			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
-			Produto novoProduto = new Produto();
-			novoProduto.setId(Long.parseLong(objetoAtual.get("id")
-					.getAsString()));
-			novoProduto.setNome(objetoAtual.get("nome").getAsString());
-			novoProduto.setDepartamento(objetoAtual.get("departamento")
-					.getAsString());
-			novoProduto.setFabricante(objetoAtual.get("fabricante")
-					.getAsString());
-			novoProduto.setTamanho(objetoAtual.get("tamanho").getAsString());
-			novoProduto.setUrlImage(objetoAtual.get("urlImage").getAsString());
-			novoProduto.setItemExclusivo(new Boolean(objetoAtual.get(
-					"itemExclusivo").getAsString()));
-			novoProduto.setDataValidade(objetoAtual.get("dataValidade")
-					.getAsString());
-			novoProduto.setPrecoDeCusto(Long.parseLong(objetoAtual.get(
-					"dataValidade").getAsString()));
-
+			Produto novoProduto = criaProdutoPeloJson(objetoAtual);
 			listaProdutos.add(novoProduto);
 		}
 
 		return listaProdutos;
+	}
+
+	private static Produto criaProdutoPeloJson(JsonObject objetoAtual) {
+		Produto novoProduto = new Produto();
+		novoProduto.setId(Long.parseLong(objetoAtual.get("id")
+				.getAsString()));
+		novoProduto.setNome(objetoAtual.get("nome").getAsString());
+		novoProduto.setDepartamento(objetoAtual.get("departamento")
+				.getAsString());
+		novoProduto.setFabricante(objetoAtual.get("fabricante")
+				.getAsString());
+		novoProduto.setTamanho(objetoAtual.get("tamanho").getAsString());
+		novoProduto.setUrlImage(objetoAtual.get("urlImage").getAsString());
+		novoProduto.setItemExclusivo(new Boolean(objetoAtual.get(
+				"itemExclusivo").getAsString()));
+		novoProduto.setDataValidade(objetoAtual.get("dataValidade")
+				.getAsString());
+		novoProduto.setPrecoDeCusto(Long.parseLong(objetoAtual.get(
+				"dataValidade").getAsString()));
+		return novoProduto;
 	}
 	
 	public static String printaProduto(Produto p) {
