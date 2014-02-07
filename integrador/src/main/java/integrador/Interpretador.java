@@ -212,11 +212,11 @@ public class Interpretador {
 
 			conn.disconnect();
 			if (tipo == CLIENTE)
-				return ClienteUtils.jsonParaCliente(lista);
+				return ClienteUtils.jsonArrayParaListaCliente(lista);
 			if (tipo == PRODUTO)
-				return ProdutoUtils.jsonParaProduto(lista);
+				return ProdutoUtils.jsonArrayParaListaProduto(lista);
 			if (tipo == PEDIDO)
-				return PedidoUtils.jsonParaPedido(lista);
+				return PedidoUtils.jsonArrayParaListaPedido(lista);
 
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

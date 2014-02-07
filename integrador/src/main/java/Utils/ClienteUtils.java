@@ -23,49 +23,56 @@ public class ClienteUtils {
 			cl.create(cliente);
 		}
 	}
-	
-	public static ArrayList<Object> jsonParaCliente(JsonArray lista) {
+
+	public static ArrayList<Object> jsonArrayParaListaCliente(JsonArray lista) {
 		ArrayList<Object> listaClientes = new ArrayList<Object>();
 		for (int i = 0; i < lista.size(); i++) {
 			JsonObject objetoAtual = lista.get(i).getAsJsonObject();
-			Cliente novoCliente = new Cliente();
-			novoCliente.setId(Long.parseLong(objetoAtual.get("id")
-					.getAsString()));
-			novoCliente.setCelular(objetoAtual.get("celular").getAsString());
-			novoCliente.setCpf(objetoAtual.get("cpf").getAsString());
-			novoCliente.setEmail(objetoAtual.get("email").getAsString());
-			novoCliente.setNome(objetoAtual.get("nome").getAsString());
-
-			String[] split = objetoAtual.get("dataNascimento").getAsString()
-					.split("T")[0].split("-");
-
-			XMLGregorianCalendar date = null;
-			try {
-				date = DatatypeFactory.newInstance().newXMLGregorianCalendar(
-						new GregorianCalendar(Integer.parseInt(split[0]),
-								Integer.parseInt(split[1]), Integer
-										.parseInt(split[2])));
-			} catch (DatatypeConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			novoCliente.setDataNascimento(date);
+			Cliente novoCliente = criaClientePeloJson(objetoAtual);
 			listaClientes.add(novoCliente);
 		}
 
 		return listaClientes;
 	}
-	
+
+	private static Cliente criaClientePeloJson(JsonObject objetoAtual) {
+		Cliente novoCliente = new Cliente();
+		novoCliente.setId(Long.parseLong(objetoAtual.get("id").getAsString()));
+		novoCliente.setCelular(objetoAtual.get("celular").getAsString());
+		novoCliente.setCpf(objetoAtual.get("cpf").getAsString());
+		novoCliente.setEmail(objetoAtual.get("email").getAsString());
+		novoCliente.setNome(objetoAtual.get("nome").getAsString());
+
+		XMLGregorianCalendar date = stringParaXMLGregorianDate(objetoAtual.get(
+				"dataNascimento").getAsString());
+
+		novoCliente.setDataNascimento(date);
+		return novoCliente;
+	}
+
+	private static XMLGregorianCalendar stringParaXMLGregorianDate(String data) {
+		String[] split = data.split("T")[0].split("-");
+
+		XMLGregorianCalendar date = null;
+		try {
+			date = DatatypeFactory.newInstance().newXMLGregorianCalendar(
+					new GregorianCalendar(Integer.parseInt(split[0]), Integer
+							.parseInt(split[1]), Integer.parseInt(split[2])));
+		} catch (DatatypeConfigurationException e) {
+			e.printStackTrace();
+		}
+		return date;
+	}
+
 	public static String printaCliente(Cliente c) {
 		return c.getId() + "/" + c.getCelular() + "/" + c.getCpf() + "/"
 				+ c.getEmail() + "/" + c.getNome() + "/"
 				+ c.getDataNascimento();
 	}
-	
+
 	public static ClienteResourcePortType criaClienteResourcePortType() {
 		ClienteResource c = new ClienteResource();
 		return c.getClienteResourcePort();
 	}
-	
+
 }
