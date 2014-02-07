@@ -72,28 +72,20 @@ public class ListaUtilsTest extends TestCase {
 		Produto p5 = new Produto();
 		Produto p6 = new Produto();		
 		
-		p1.setId((long)1337);
-		p2.setId((long)1338);
-		p3.setId((long)1339);
-		p4.setId((long)1340);
-		p5.setId((long)1341);
-		p6.setId((long)1342);
+		p1.setId(1337L);
+		p2.setId(1338L);
+		p3.setId(1339L);
+		p4.setId(1340L);
+		p5.setId(1341L);
+		p6.setId(1342L);
 				
 		
 		ArrayList<Produto> novo = new ArrayList<Produto>();
 		ArrayList<Produto> antigo = new ArrayList<Produto>();
 		
-		antigo.add(p1);
-		antigo.add(p2);
-		antigo.add(p3);
-		antigo.add(p4);
+		antigo.addAll(Arrays.asList(p1,p2,p3,p4));
+		novo.addAll(Arrays.asList(p1,p2,p3,p4,p5,p6));
 
-		novo.add(p1);
-		novo.add(p2);
-		novo.add(p3);
-		novo.add(p4);
-		novo.add(p5);
-		novo.add(p6);	
 		
 		ArrayList<Produto> aAdicionar = new ArrayList<Produto>();
 		
