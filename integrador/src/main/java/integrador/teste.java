@@ -40,7 +40,16 @@ public static void main(String[] args) {
 		System.out.println(produto.getNome());
 	}
 	
-	Interpretador.excluirProdutos("15");
+	Produto prod = new Produto();
+	prod.setId(42L);
+	prod.setNome("TESTE ID COM PREÇO");
+	prod.setPrecoDeCusto(100L);
+	prod.setDepartamento("Departamento");
+	prod.setFabricante("Fabricante");
+	
+	ArrayList<Produto> a = new ArrayList<Produto>();
+	a.add(prod);
+	Interpretador.adicionarNovosProdutos(a);
 
 }
 

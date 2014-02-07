@@ -40,10 +40,10 @@ public class Interpretador {
 
 	public static void main(String[] args) {
 		new Interpretador();
-		Cliente c1 =  criaClienteResourcePortType().get((long)1);
-		c1.setId((long)21);
-		c1.setNome("NOVO");
-		adicionarNovosClientesParaTeste(c1);
+//		Cliente c1 =  criaClienteResourcePortType().get((long)1);
+//		c1.setId((long)21);
+//		c1.setNome("NOVO");
+//		adicionarNovosClientesParaTeste(c1);
 	}
 
 	public Interpretador() {
@@ -374,7 +374,7 @@ public class Interpretador {
 			}
 	}
 
-	public static void adicionarNovosProdutos(List<Produto> novosProdutos) {
+	public static void adicionarNovosProdutos(ArrayList<Produto> novosProdutos) {
 		try {
 			URL url = new URL("http://dls98:8181/captacao/api/produtos.json");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -387,6 +387,7 @@ public class Interpretador {
 			JsonObject json = new JsonObject();
 
 			for (Produto produto : novosProdutos) {
+				
 				json.addProperty("id", produto.getId());
 				json.addProperty("nome", produto.getNome());
 				json.addProperty("departamento", produto.getDepartamento());
@@ -405,6 +406,7 @@ public class Interpretador {
 				throw new RuntimeException("Failed : HTTP error code : "
 						+ conn.getResponseCode());
 			}
+			conn.disconnect();
 		} catch (MalformedURLException e) {
 
 			e.printStackTrace();
@@ -415,15 +417,26 @@ public class Interpretador {
 		}
 	}
 	
-	public static void excluirProdutos(String id) {
+	public static void adicionarNovosProdutosT() {
 		try {
-			URL url = new URL("http://dls98:8181/captacao/api/produtos?id="
-					+ id);
+			URL url = new URL("http://dls98:8181/captacao/api/produtos.json");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("DELETE");
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/json");
+
+			OutputStream os = conn.getOutputStream();
+
+			String input = "{\"id\" : 42, \"nome\" : \"TESTE ID IDENTITY\", \"departamento\" : \"MONITORES\",  \"fabricante\" : \"BENQ\", \"precoDeCusto\" : 100, \"dataValidade\" : null, \"tamanho\" : null, \"urlImage\" : null, \"itemExclusivo\" : null}";
+			 
+			os.write(input.getBytes());
+			os.flush();
+
+			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+				throw new RuntimeException("Failed : HTTP error code : "
+						+ conn.getResponseCode());
+			}
 			conn.disconnect();
-			int responseCode = conn.getResponseCode();
-			System.out.println("response code" + responseCode);
 		} catch (MalformedURLException e) {
 
 			e.printStackTrace();
@@ -433,7 +446,7 @@ public class Interpretador {
 			e.printStackTrace();
 		}
 	}
-
+	
 	private boolean igual (Cliente a , Cliente b){
 			return a.getId() == b.getId();
 	}
