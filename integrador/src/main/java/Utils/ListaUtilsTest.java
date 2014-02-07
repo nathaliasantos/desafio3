@@ -10,5 +10,6 @@ import org.junit.Test;
 import soa32.resources.cliente.Cliente;
 
 public class ListaUtilsTest extends TestCase {
+	
 
 }

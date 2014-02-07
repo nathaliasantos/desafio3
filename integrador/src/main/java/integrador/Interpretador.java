@@ -40,7 +40,6 @@ public class Interpretador {
 
 	public static void main(String[] args) {
 		new Interpretador();
-<<<<<<< HEAD
 //		Cliente c1 =  criaClienteResourcePortType().get((long)1);
 //		c1.setId((long)21);
 //		c1.setNome("NOVO");
@@ -49,8 +48,6 @@ public class Interpretador {
 		//c1.setId((long)21);
 		//c1.setNome("NOVO");
 		//adicionarNovosClientesParaTeste(c1);
-=======
->>>>>>> 80994bc408dec88905d975966d73cadcc7e27277
 	}
 
 	public Interpretador() {
@@ -151,11 +148,7 @@ public class Interpretador {
 			ArrayList<Produto> produtosFaturamento = (ArrayList) criaProdutoResourcePortType()
 					.list();
 			ArrayList<Produto> produtosNovos;
-			produtosNovos = ListaUtils.listaAdicionar(produtosCaptacao,
-					produtosFaturamento);
-
-			ArrayList<Produto> ProdutosExcluidos;
-			ProdutosExcluidos = ListaUtils.listaDeletar(produtosCaptacao,
+			produtosNovos = ListaUtils.listaAdicionarProduto(produtosCaptacao,
 					produtosFaturamento);
 
 			adicionarNovosProdutos(produtosNovos);
@@ -388,13 +381,12 @@ public class Interpretador {
 		}
 
 	}
-<<<<<<< HEAD
 	
 	public static void adicionarNovosProdutosT() {
-=======
 
+	}
 	public static void excluirProdutos(String id) {
->>>>>>> 80994bc408dec88905d975966d73cadcc7e27277
+
 		try {
 			URL url = new URL("http://dls98:8181/captacao/api/produtos.json");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
