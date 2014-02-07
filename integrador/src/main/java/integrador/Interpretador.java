@@ -114,8 +114,7 @@ public class Interpretador {
 			}
 			
 			ArrayList<Produto> produtosNovos;
-			produtosNovos = ListaUtils.listaAdicionarProduto(produtosCaptacao,
-					produtosFaturamento);
+			produtosNovos = ListaUtils.listaAdicionarProduto(produtosFaturamento,produtosCaptacao);
 			
 			System.out.println("PRODUTO ADD: ");
 			for (Produto a : produtosNovos) {

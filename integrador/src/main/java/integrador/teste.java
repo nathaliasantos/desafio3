@@ -34,7 +34,7 @@ public class teste {
 //		System.out.println("////////////////////////////////////////////");
 //		listarClientes();
 //		System.out.println("////////////////////////////////////////////");
-//		listarProdutos();
+		listarProdutos();
 		
 	//	for (int i=50;;i++)
 	//	{
