@@ -3,7 +3,6 @@ package Utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -62,8 +61,6 @@ public class ListaUtilsTest extends TestCase {
 		result.clear();		
 		assertEquals(ListaUtils.listaAdicionarCliente(nova, antiga), result);
 	}
-	
-	
 
 
 	@Test
@@ -107,9 +104,7 @@ public class ListaUtilsTest extends TestCase {
 		
 		assertEquals(aAdicionar, retornado);
 		
-			
 	}
-	
 
 	@Test 
 	public void testeClienteIgual() {
@@ -127,6 +122,5 @@ public class ListaUtilsTest extends TestCase {
 		Cliente c2 = new Cliente();
 		c2.setId((long)1);
 		assertTrue(ListaUtils.igual(c1, c2));
-	}	
-
+	}
 }
