@@ -88,7 +88,7 @@ public class teste {
 		adicionarNovosClientesNaCaptacaoParaTeste(c1);
 	}
 
-	public static void adicionarNovosClientesNaCaptacaoParaTeste(Cliente cliente) {
+	public static void adicionarNovosClientesNaCaptacaoParaTeste(Cliente cliente){
 		try {
 			URL url = new URL("http://dls98:8181/captacao/api/clientes.json");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();

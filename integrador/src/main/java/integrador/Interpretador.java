@@ -3,6 +3,7 @@ package integrador;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,12 +22,21 @@ import Utils.PedidoUtils;
 import Utils.ProdutoUtils;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class Interpretador {
 
 	public static void main(String[] args) {
 		new Interpretador();
+//		Cliente c1 =  criaClienteResourcePortType().get((long)1);
+//		c1.setId((long)21);
+//		c1.setNome("NOVO");
+//		adicionarNovosClientesParaTeste(c1);
+		//Cliente c1 =  criaClienteResourcePortType().get((long)1);
+		//c1.setId((long)21);
+		//c1.setNome("NOVO");
+		//adicionarNovosClientesParaTeste(c1);
 	}
 
 	public Interpretador() {
@@ -224,7 +234,112 @@ public class Interpretador {
 			e.printStackTrace();
 		}
 		return null;
-
 	}
 
+	public static void adicionarNovosProdutos(ArrayList<Produto> novosProdutos) {
+
+		try {
+			URL url = new URL("http://dls98:8181/captacao/api/produtos.json");
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/json");
+
+			OutputStream os = conn.getOutputStream();
+
+			JsonObject json = new JsonObject();
+
+			for (Produto produto : novosProdutos) {
+				
+				json.addProperty("id", produto.getId());
+				json.addProperty("nome", produto.getNome());
+				json.addProperty("departamento", produto.getDepartamento());
+				json.addProperty("fabricante", produto.getFabricante());
+				json.addProperty("precoDeCusto", produto.getPrecoDeCusto());
+				json.addProperty("dataValidade", produto.getDataValidade());
+				json.addProperty("tamanho", produto.getTamanho());
+				json.addProperty("urlImage", produto.getUrlImage());
+				json.addProperty("itemExclusivo", produto.isItemExclusivo());
+
+				os.write(json.toString().getBytes());
+				os.flush();
+			}
+
+			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+				throw new RuntimeException("Failed : HTTP error code : "
+						+ conn.getResponseCode());
+			}
+			conn.disconnect();
+		} catch (MalformedURLException e) {
+
+			e.printStackTrace();
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+
+	}
+	public static void adicionarNovosProdutosT() {
+
+	}
+	public static void excluirProdutos(String id) {
+
+		try {
+			URL url = new URL("http://dls98:8181/captacao/api/produtos.json");
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/json");
+
+			OutputStream os = conn.getOutputStream();
+
+			String input = "{\"id\" : 42, \"nome\" : \"TESTE ID IDENTITY\", \"departamento\" : \"MONITORES\",  \"fabricante\" : \"BENQ\", \"precoDeCusto\" : 100, \"dataValidade\" : null, \"tamanho\" : null, \"urlImage\" : null, \"itemExclusivo\" : null}";
+			 
+			os.write(input.getBytes());
+			os.flush();
+
+			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+				throw new RuntimeException("Failed : HTTP error code : "
+						+ conn.getResponseCode());
+			}
+			conn.disconnect();
+		} catch (MalformedURLException e) {
+
+			e.printStackTrace();
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+	}
+
+	private boolean igual(Cliente a, Cliente b) {
+		return a.getId() == b.getId();
+	}
+
+	public ArrayList<Cliente> diferenca(ArrayList<Cliente> list1,
+			ArrayList<Cliente> list2) {
+		ArrayList<Cliente> list = new ArrayList<Cliente>();
+		for (Cliente a : list1) {
+			boolean existe = false;
+			for (Cliente b : list2) {
+				if (igual(a, b))
+					existe = true;
+			}
+			if (!existe)
+				list.add(a);
+		}
+		return list;
+	}
+
+	public ArrayList<Cliente> listaAdicionar(ArrayList<Cliente> antiga,
+			ArrayList<Cliente> nova) {
+		return diferenca(nova, antiga);
+	}
+
+	public ArrayList<Cliente> listaDeletar(ArrayList<Cliente> antiga,
+			ArrayList<Cliente> nova) {
+		return diferenca(antiga, nova);
+	}
 }
