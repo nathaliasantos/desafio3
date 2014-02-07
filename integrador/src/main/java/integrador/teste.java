@@ -38,10 +38,10 @@ public class teste {
 		
 	//	for (int i=50;;i++)
 	//	{
-			listarClientes();
-			criarClientePadraoParaTeste();
-			//listarClientes();
+		//	listarClientes();
+			//criarClientePadraoParaTeste();
 			
+			//listarClientes();
 			
 			
 	//	}
@@ -60,7 +60,7 @@ public class teste {
 		ArrayList<Cliente> listaCliente = (ArrayList<Cliente>) ClienteUtils.criaClienteResourcePortType().list();
 		System.out.println("listagem do nome dos clientes:");
 		for (Cliente cliente : listaCliente) {
-			System.out.println(cliente.getId());
+			System.out.println(cliente.getCelular());
 		}
 	}
 

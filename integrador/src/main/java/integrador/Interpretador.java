@@ -32,14 +32,16 @@ public class Interpretador {
 	}
 
 	public Interpretador() {
-		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(
-				3);
-		executor.scheduleAtFixedRate(new ThreadClient(), 0, 5000,
-				TimeUnit.MILLISECONDS);
-		executor.scheduleAtFixedRate(new ThreadProduto(), 100, 5000,
-				TimeUnit.MILLISECONDS);
-		executor.scheduleAtFixedRate(new ThreadPedido(), 200, 5000,
-				TimeUnit.MILLISECONDS);
+		new ThreadProduto().run();
+//		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
+//
+//		executor.scheduleAtFixedRate(new ThreadProduto(), 100, 5000,
+//				TimeUnit.MILLISECONDS);
+//		executor.scheduleAtFixedRate(new ThreadClient(), 0, 5000,
+//				TimeUnit.MILLISECONDS);
+		
+//		executor.scheduleAtFixedRate(new ThreadPedido(), 200, 5000,
+//				TimeUnit.MILLISECONDS);
 
 	}
 
@@ -68,7 +70,7 @@ public class Interpretador {
 			
 			ArrayList<Cliente> clientesNovos;
 			clientesNovos = ListaUtils.listaAdicionarCliente(
-					clientesFaturamento, clientesCaptacao);
+					clientesCaptacao,clientesFaturamento);
 
 			System.out.println("CLIENTE PARA ADD: ");
 			for (Cliente a : clientesNovos) {
@@ -193,12 +195,12 @@ public class Interpretador {
 	private ArrayList<Object> getListFromUrl(String strUrl, int tipo) {
 		try {
 			URL url = new URL("http://dls98:8181" + strUrl);
+			//System.out.println("http://dls98:8181" + strUrl);		
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 
 			if (conn.getResponseCode() != 200) {
-				throw new RuntimeException("Failed : HTTP error code : "
-						+ conn.getResponseCode());
+				return new ArrayList<Object>();
 			}
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(
