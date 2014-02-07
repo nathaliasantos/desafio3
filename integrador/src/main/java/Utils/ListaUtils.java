@@ -5,7 +5,7 @@ import soa32.resources.cliente.Cliente;
 import soa32.resources.produto.Produto;
 
 public class ListaUtils {
-	private static boolean igual(Cliente a, Cliente b) {
+	public static boolean igual(Cliente a, Cliente b) {
 		return a.getId() == b.getId();
 	}
 
@@ -24,7 +24,7 @@ public class ListaUtils {
 		return list;
 	}
 	
-	private static boolean igual(Produto a, Produto b) {
+	public static boolean igual(Produto a, Produto b) {
 		return a.getId() == b.getId();
 	}
 	
