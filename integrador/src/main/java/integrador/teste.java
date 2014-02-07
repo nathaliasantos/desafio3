@@ -15,8 +15,6 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import com.google.gson.JsonObject;
-
 import soa32.resources.cliente.Cliente;
 import soa32.resources.cliente.ClienteResource;
 import soa32.resources.cliente.ClienteResourcePortType;
@@ -24,22 +22,34 @@ import soa32.resources.notaFiscal.NotaFiscal;
 import soa32.resources.notaFiscal.NotaFiscalResource;
 import soa32.resources.notaFiscal.NotaFiscalResourcePortType;
 import soa32.resources.produto.Produto;
-import soa32.resources.produto.ProdutoResource;
-import soa32.resources.produto.ProdutoResourcePortType;
+import Utils.ClienteUtils;
+import Utils.NotaFiscalUtils;
+import Utils.ProdutoUtils;
+
+import com.google.gson.JsonObject;
 
 public class teste {
 	public static void main(String[] args) { // FATURAMENTO
-		listarNotasFiscais();
-		System.out.println("////////////////////////////////////////////");
-		listarClientes();
-		System.out.println("////////////////////////////////////////////");
-		listarProdutos();
+//		listarNotasFiscais();
+//		System.out.println("////////////////////////////////////////////");
+//		listarClientes();
+//		System.out.println("////////////////////////////////////////////");
+//		listarProdutos();
+		
+	//	for (int i=50;;i++)
+	//	{
+			listarClientes();
+			criarClientePadraoParaTeste();
+			//listarClientes();
+			
+			
+			
+	//	}
+		
 	}
 
 	private static void listarProdutos() {
-		ProdutoResource p = new ProdutoResource();
-		ProdutoResourcePortType pr = p.getProdutoResourcePort();
-		ArrayList<Produto> listaProduto = (ArrayList<Produto>) pr.list();
+		ArrayList<Produto> listaProduto = (ArrayList<Produto>) ProdutoUtils.criaProdutoResourcePortType().list();
 		System.out.println("listagem do numero dos produtos:");
 		for (Produto produto : listaProduto) {
 			System.out.println(produto.getNome());
@@ -47,9 +57,7 @@ public class teste {
 	}
 
 	private static void listarClientes() {
-		ClienteResource c = new ClienteResource();
-		ClienteResourcePortType cl = c.getClienteResourcePort();
-		List<Cliente> listaCliente = cl.list();
+		ArrayList<Cliente> listaCliente = (ArrayList<Cliente>) ClienteUtils.criaClienteResourcePortType().list();
 		System.out.println("listagem do nome dos clientes:");
 		for (Cliente cliente : listaCliente) {
 			System.out.println(cliente.getId());
@@ -57,14 +65,10 @@ public class teste {
 	}
 
 	private static void listarNotasFiscais() {
-		NotaFiscalResource n = new NotaFiscalResource();
-		NotaFiscalResourcePortType no = n.getNotaFiscalResourcePort();
-		List<NotaFiscal> listaNota = no.list();
+		ArrayList<NotaFiscal> listaNota = (ArrayList<NotaFiscal>)NotaFiscalUtils.criaNotaFiscalResourcePortType().list();
 		System.out.println("listagem do numero das notas fiscais:");
 		for (NotaFiscal notaFiscal : listaNota) {
-			System.out.println(notaFiscal.getId() + "//"
-					+ notaFiscal.getNumero() + "//" + notaFiscal.getPedido()
-					+ "//" + notaFiscal.getStatus());
+			System.out.println(notaFiscal.getId());
 		}
 	}
 
@@ -80,7 +84,7 @@ public class teste {
 
 		Cliente c1 = new Cliente();
 		c1.setCelular("999999999");
-		c1.setId((long) 28);
+		c1.setId((long)1);
 		c1.setNome("TESTEID28");
 		c1.setCpf("111.111.111-11");
 		c1.setEmail("joaninha@teste.com");
