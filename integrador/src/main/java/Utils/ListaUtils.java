@@ -1,29 +1,45 @@
 package Utils;
 import java.util.ArrayList;
 
+import soa32.resources.cliente.Cliente;
+import soa32.resources.produto.Produto;
+
 public class ListaUtils {
-	public static <T> ArrayList<T> diferenca(ArrayList<T> list1, ArrayList<T> list2) {
-		ArrayList<T> list = list1;
-		list.removeAll(list2);
+	private static boolean igual(Cliente a, Cliente b) {
+		return a.getId() == b.getId();
+	}
+
+	public static ArrayList<Cliente> listaAdicionarCliente(ArrayList<Cliente> nova,
+			ArrayList<Cliente> antiga) {
+		ArrayList<Cliente> list = new ArrayList<Cliente>();
+		for (Cliente a : nova) {
+			boolean existe = false;
+			for (Cliente b : antiga) {
+				if (igual(a, b))
+					existe = true;
+			}
+			if (!existe)
+				list.add(a);
+		}
 		return list;
 	}
 	
-	public static <T> ArrayList<T> interseccao(ArrayList<T> list1, ArrayList<T> list2) {
-        ArrayList<T> list = new ArrayList<T>();
-
-        for (T t : list1) {
-            if(list2.contains(t)) {
-                list.add(t);
-            }
-        }
-        return list;
-    }
-
-	public static <T> ArrayList<T> listaAdicionar(ArrayList<T> antiga, ArrayList<T> nova) {
-		return diferenca(nova, antiga);
+	private static boolean igual(Produto a, Produto b) {
+		return a.getId() == b.getId();
 	}
-
-	public static <T> ArrayList<T> listaDeletar(ArrayList<T> antiga, ArrayList<T> nova) {
-		return diferenca(antiga, nova);
+	
+	public static ArrayList<Produto> listaAdicionarProduto(ArrayList<Produto> nova,
+			ArrayList<Produto> antiga) {
+		ArrayList<Produto> list = new ArrayList<Produto>();
+		for (Produto a : nova) {
+			boolean existe = false;
+			for (Produto b : antiga) {
+				if (igual(a, b))
+					existe = true;
+			}
+			if (!existe)
+				list.add(a);
+		}
+		return list;
 	}
 }
