@@ -227,5 +227,4 @@ public class Interpretador {
 		}
 		return null;
 	}
-
 }
