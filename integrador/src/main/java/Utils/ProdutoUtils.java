@@ -66,7 +66,7 @@ public class ProdutoUtils {
 		json.addProperty("itemExclusivo", produto.isItemExclusivo());
 		return json;
 	}
-	
+
 	public static ArrayList<Object> jsonArrayParaListaProduto(JsonArray lista) {
 		ArrayList<Object> listaProdutos = new ArrayList<Object>();
 		for (int i = 0; i < lista.size(); i++) {
@@ -80,13 +80,11 @@ public class ProdutoUtils {
 
 	private static Produto criaProdutoPeloJson(JsonObject objetoAtual) {
 		Produto novoProduto = new Produto();
-		novoProduto.setId(Long.parseLong(objetoAtual.get("id")
-				.getAsString()));
+		novoProduto.setId(Long.parseLong(objetoAtual.get("id").getAsString()));
 		novoProduto.setNome(objetoAtual.get("nome").getAsString());
 		novoProduto.setDepartamento(objetoAtual.get("departamento")
 				.getAsString());
-		novoProduto.setFabricante(objetoAtual.get("fabricante")
-				.getAsString());
+		novoProduto.setFabricante(objetoAtual.get("fabricante").getAsString());
 		novoProduto.setTamanho(objetoAtual.get("tamanho").getAsString());
 		novoProduto.setUrlImage(objetoAtual.get("urlImage").getAsString());
 		novoProduto.setItemExclusivo(new Boolean(objetoAtual.get(
@@ -97,11 +95,11 @@ public class ProdutoUtils {
 				"dataValidade").getAsString()));
 		return novoProduto;
 	}
-	
+
 	public static String printaProduto(Produto p) {
-		return p.getId() + "/" + p.getNome() + "/" + p.getPrecoDeCusto();		
+		return p.getId() + "/" + p.getNome() + "/" + p.getPrecoDeCusto();
 	}
-	
+
 	public static ProdutoResourcePortType criaProdutoResourcePortType() {
 		ProdutoResource p = new ProdutoResource();
 		return p.getProdutoResourcePort();
