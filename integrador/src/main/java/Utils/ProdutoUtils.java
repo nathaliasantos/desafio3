@@ -79,6 +79,7 @@ public class ProdutoUtils {
 		return listaProdutos;
 	}
 
+
 	private static Produto criaProdutoPeloJson(JsonObject objetoAtual) {
 		Produto novoProduto = new Produto();
 		if (objetoAtual.get("id") != null)
@@ -92,19 +93,35 @@ public class ProdutoUtils {
 		if (objetoAtual.get("fabricante") != null)
 			novoProduto.setFabricante(objetoAtual.get("fabricante")
 					.getAsString());
-		if (objetoAtual.get("tamanho") != null)
+		try{
 			novoProduto.setTamanho(objetoAtual.get("tamanho").getAsString());
-		if (objetoAtual.get("urlImage") != null)
+		}
+		catch(Exception e){
+			novoProduto.setTamanho("null");
+		}
+		
+		try{
 			novoProduto.setUrlImage(objetoAtual.get("urlImage").getAsString());
-		if (objetoAtual.get("itemExclusivo") != null)
+		}
+		catch(Exception e){
+			novoProduto.setUrlImage("null");
+		}
+		
+		try{
 			novoProduto.setItemExclusivo(new Boolean(objetoAtual.get(
 					"itemExclusivo").getAsString()));
-		if (objetoAtual.get("dataValidade") != null)
-			novoProduto.setDataValidade(objetoAtual.get("dataValidade")
-					.getAsString());
-		if (objetoAtual.get("precoDeCusto") != null)
+		}
+		catch(Exception e){
+			novoProduto.setItemExclusivo(null);
+		}
+		try{
 			novoProduto.setPrecoDeCusto(Long.parseLong(objetoAtual.get(
 					"precoDeCusto").getAsString()));
+		}
+		catch(Exception e){
+			novoProduto.setPrecoDeCusto(0);
+		}
+
 		return novoProduto;
 	}
 

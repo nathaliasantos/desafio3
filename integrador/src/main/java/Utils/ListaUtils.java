@@ -25,7 +25,7 @@ public class ListaUtils {
 	}
 	
 	public static boolean igual(Produto a, Produto b) {
-		return a.getId() == b.getId();
+		return a.getNome().compareTo(b.getNome())==0;
 	}
 	
 	public static ArrayList<Produto> listaAdicionarProduto(ArrayList<Produto> nova,

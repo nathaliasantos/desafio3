@@ -25,22 +25,18 @@ import com.google.gson.JsonObject;
 
 public class teste {
 	public static void main(String[] args) { // FATURAMENTO
-//		listarNotasFiscais();
-//		System.out.println("////////////////////////////////////////////");
-//		listarClientes();
-//		System.out.println("////////////////////////////////////////////");
-		listarProdutos();
-		
-	//	for (int i=50;;i++)
-	//	{
-			//criarClientePadraoParaTeste();
-			
-		//	listarClientes();
-		//ClienteUtils.criaClienteResourcePortType().delete((long)27);
-			
-			
-	//	}
-		
+		//cria cliente na captacao
+        //criarClientePadraoParaTesteCaptacao();
+        //clientes do faturamento
+        //listarClientes();
+        
+        //produtos do faturamento
+        //listarProdutos();
+        
+        //notas fiscais do faturamento
+        //listarNotasFiscais();
+        
+        //delete nao funciona entao nao da para fazer a parte das notas fiscais
 	}
 
 	private static void listarProdutos() {

@@ -19,7 +19,7 @@ public class ClienteUtils {
 		ClienteResource c = new ClienteResource();
 		ClienteResourcePortType cl = c.getClienteResourcePort();
 		for (Cliente cliente : clientesNovos) {
-			System.out.println("CRIAR: " + cliente.getDataNascimento());
+			System.out.println("CRIAR: " + cliente.getId());
 			cl.create(cliente);
 		}
 	}

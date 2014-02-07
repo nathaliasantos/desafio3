@@ -32,16 +32,15 @@ public class Interpretador {
 	}
 
 	public Interpretador() {
-		new ThreadProduto().run();
-//		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
-//
-//		executor.scheduleAtFixedRate(new ThreadProduto(), 100, 5000,
-//				TimeUnit.MILLISECONDS);
-//		executor.scheduleAtFixedRate(new ThreadClient(), 0, 5000,
-//				TimeUnit.MILLISECONDS);
-		
-//		executor.scheduleAtFixedRate(new ThreadPedido(), 200, 5000,
-//				TimeUnit.MILLISECONDS);
+//		new ThreadProduto().run();
+		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+
+		//executor.scheduleAtFixedRate(new ThreadProduto(), 100, 5000,
+		//		TimeUnit.MILLISECONDS);
+		executor.scheduleAtFixedRate(new ThreadClient(), 0, 5000,
+				TimeUnit.MILLISECONDS);		
+		//executor.scheduleAtFixedRate(new ThreadPedido(), 200, 5000,
+		//		TimeUnit.MILLISECONDS);
 
 	}
 
@@ -57,12 +56,12 @@ public class Interpretador {
 			ArrayList<Cliente> clientesFaturamento = (ArrayList) ClienteUtils.criaClienteResourcePortType()
 					.list();
 
-			System.out.println("CLIENTES FATURAMENTO ANTES: ");
+			System.out.println("\nCLIENTES FATURAMENTO ANTES: ");
 			for (Cliente a : clientesFaturamento) {
 				System.out.println(ClienteUtils.printaCliente(a));
 			}
 
-			System.out.println("CLIENTES CAPTACAO ANTES: ");
+			System.out.println("\n CLIENTES CAPTACAO ANTES: ");
 			for (Cliente a : clientesCaptacao) {
 				System.out.println(ClienteUtils.printaCliente(a));
 			}
@@ -72,21 +71,22 @@ public class Interpretador {
 			clientesNovos = ListaUtils.listaAdicionarCliente(
 					clientesCaptacao,clientesFaturamento);
 
-			System.out.println("CLIENTE PARA ADD: ");
+			System.out.println("\nCLIENTE PARA ADD: ");
 			for (Cliente a : clientesNovos) {
 				System.out.println(ClienteUtils.printaCliente(a));
 			}
 
 			ClienteUtils.adicionarNovosClientes(clientesNovos);
 
-			System.out.println("CLIENTES FATURAMENTO DEPOIS: ");
+			System.out.println("\nCLIENTES FATURAMENTO DEPOIS: ");
 			for (Cliente a : clientesFaturamento) {
 				System.out.println(ClienteUtils.printaCliente(a));
 			}
-			System.out.println("CLIENTES CAPTACAO DEPOIS: ");
+			System.out.println("\nCLIENTES CAPTACAO DEPOIS: ");
 			for (Cliente a : clientesCaptacao) {
 				System.out.println(ClienteUtils.printaCliente(a));
 			}
+			System.out.println("//////////////////////////////////////////");
 		}
 	}
 
@@ -103,12 +103,12 @@ public class Interpretador {
 
 			ArrayList<Produto> produtosFaturamento = (ArrayList) ProdutoUtils.criaProdutoResourcePortType().list();
 			
-			System.out.println("PRODUTO FATURAMENTO ANTES: ");
+			System.out.println("\nPRODUTO FATURAMENTO ANTES: ");
 			for (Produto a : produtosFaturamento) {
 				System.out.println(ProdutoUtils.printaProduto(a));
 			}
 
-			System.out.println("PRODUTO CAPTACAO ANTES: ");
+			System.out.println("\nPRODUTO CAPTACAO ANTES: ");
 			for (Produto a : produtosCaptacao) {
 				System.out.println(ProdutoUtils.printaProduto(a));
 			}
@@ -116,22 +116,23 @@ public class Interpretador {
 			ArrayList<Produto> produtosNovos;
 			produtosNovos = ListaUtils.listaAdicionarProduto(produtosFaturamento,produtosCaptacao);
 			
-			System.out.println("PRODUTO ADD: ");
+			System.out.println("\nPRODUTO ADD: ");
 			for (Produto a : produtosNovos) {
 				System.out.println(ProdutoUtils.printaProduto(a));
 			}
 			
 			ProdutoUtils.adicionarNovosProdutos(produtosNovos);
 			
-			System.out.println("PRODUTO FATURAMENTO DEPOIS: ");
+			System.out.println("\nPRODUTO FATURAMENTO DEPOIS: ");
 			for (Produto a : produtosFaturamento) {
 				System.out.println(ProdutoUtils.printaProduto(a));
 			}
 
-			System.out.println("PRODUTO CAPTACAO DEPOIS: ");
+			System.out.println("\nPRODUTO CAPTACAO DEPOIS: ");
 			for (Produto a : produtosCaptacao) {
 				System.out.println(ProdutoUtils.printaProduto(a));
 			}
+			System.out.println("///////////////////////////////////////////////////");
 		}		
 	}
 
